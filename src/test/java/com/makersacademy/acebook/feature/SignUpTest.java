@@ -8,7 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ActiveProfiles("test")
 public class SignUpTest {
 
     WebDriver driver;
@@ -16,14 +20,15 @@ public class SignUpTest {
 
     @BeforeEach
     public void setup() {
-        System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
         driver = new ChromeDriver();
         faker = new Faker();
     }
 
     @AfterEach
     public void tearDown() {
-        driver.close();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     @Test
