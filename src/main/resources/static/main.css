@@ -8,3 +8,35 @@
     text-align: left;
     margin-bottom: 0.5rem;;
 }
+
+/*navbar css:*/
+
+.navbar ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333333;
+}
+
+.navbarlogo {
+    margin-right: auto;
+}
+.navbar ul li {
+    float: left;
+}
+
+.navbar ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar ul li a:hover {
+    background-color: #111111;
+}
+
+/*navbar css end*/
