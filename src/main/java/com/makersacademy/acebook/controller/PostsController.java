@@ -2,19 +2,20 @@ package com.makersacademy.acebook.controller;
 
 import com.makersacademy.acebook.model.Post;
 import com.makersacademy.acebook.repository.PostRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.List;
-
 @Controller
 public class PostsController {
+    final PostRepository repository;
 
-    @Autowired
-    PostRepository repository;
+    PostsController(PostRepository repository) {
+        this.repository = repository;
+    }
 
     @GetMapping("/posts")
     public String index(Model model) {
@@ -25,7 +26,7 @@ public class PostsController {
     }
 
     @PostMapping("/posts")
-    public RedirectView create(@ModelAttribute Post post) {
+    public RedirectView create(@ModelAttribute @NonNull Post post) {
         repository.save(post);
         return new RedirectView("/posts");
     }
