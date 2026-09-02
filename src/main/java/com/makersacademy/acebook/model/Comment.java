@@ -42,6 +42,10 @@ public class Comment {
         this.text = text;
         this.user = user;
         this.post = post;
+    }
+
+    @PrePersist
+    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 }
