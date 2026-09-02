@@ -7,6 +7,7 @@ import com.makersacademy.acebook.repository.PostRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ public class PostsController {
         this.repository = repository;
         this.userRepository = userRepository;
     }
+
 
     @GetMapping("/posts")
     public String index(Model model) {
@@ -41,4 +43,29 @@ public class PostsController {
         repository.save(post);
         return new RedirectView("/posts");
     }
+
+    @PostMapping("/posts/{id}/like")
+    public RedirectView like(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal OidcUser principal) {
+
+        // find post that user clicked like on
+        Post post = repository.findById(id).orElseThrow();
+
+        // get email address of person logged in
+        String username = principal.getEmail();
+
+        // find the logge din person in the users table
+        User user = userRepository.findUserByUsername(username).orElseThrow();
+
+        // add the user to the list of people who liked the post
+        post.getLikedBy().add(user);
+
+        // save the updated post
+        repository.save(post);
+
+        // send user back to posts page
+        return new RedirectView("/posts");
+    }
+
 }
