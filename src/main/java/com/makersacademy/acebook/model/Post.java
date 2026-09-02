@@ -20,6 +20,11 @@ public class Post {
     private Long id;
     private String content;
 
+//    migration creates the column as image_url,
+//    so being explicit means there won't be issues mapping over this later on:
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy("createdAt ASC")
     private List<Comment> comments = new ArrayList<>();
