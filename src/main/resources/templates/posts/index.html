@@ -35,6 +35,19 @@
                 </div>
             </form>
 
+            <form class="sort-form" th:action="@{/posts}" method="get">
+                <select name="sort" id="sort" onchange="this.form.submit()">
+                    <option value="newest" th:selected="${sort == 'newest'}">
+                        Newest
+                    </option>
+
+                    <option value="oldest" th:selected="${sort == 'oldest'}">
+                        Oldest
+                    </option>
+                </select>
+            </form>
+
+
             <!-- Posts -->
             <div class="posts">
                 <div class="post" th:each="post : ${posts}">
@@ -45,7 +58,10 @@
                     <div class="post-right">
                         <div class="above-comments">
                             <div>
-                                <p class="author" th:text="${post.user.getNickName()}"></p>
+                                <div class="top-row">
+                                    <p class="author" th:text="${post.user.getNickName()}"></p>
+                                    <p class="created-at" th:text="${#temporals.format(post.getCreatedAt(), 'dd/MM/yyyy')}"></p>
+                                </div>
                                 <p th:text="${post.content}"></p>
                             </div>
 
@@ -82,8 +98,8 @@
                             </div>
 
                         </div>
-                        <form class="add-comment-form" th:action="@{/posts/{id}/comments(id=${post.id})}" th:object="${commentForm}"
-                            method="post">
+                        <form class="add-comment-form" th:action="@{/posts/{id}/comments(id=${post.id})}"
+                            th:object="${commentForm}" method="post">
                             <div class="form-group">
                                 <input type="text" th:field="*{text}" placeholder="Write a comment..." required />
                                 <button type="submit">Reply</button>

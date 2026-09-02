@@ -33,7 +33,7 @@ public void ordersbyNewestPost() {
     Post olderPost = repository.save(new Post("Older Post"));
     Post newerPost = repository.save(new Post("Newer Post"));
 
-    // This is a neat trick used by Spring Data. No SQL queries need to be passed through. instead, it examines the method name and derives a query resembling 
+    // This is a neat trick used by Spring Data. No SQL queries need to be passed through. instead, it examines the method name and derives a query resembling
     // SELECT * FROM posts ORDER BY id DESC;
     // like this:
 
@@ -46,10 +46,23 @@ public void ordersbyNewestPost() {
 
     // which means, find all my posts by id, in descending order.
 
-    List<Post> posts = repository.findAllByOrderByIdDesc();
+    List<Post> posts = repository.findAllByOrderByCreatedAtDesc();
 
     assertEquals(newerPost.getId(), posts.get(0).getId());
     assertEquals(olderPost.getId(), posts.get(1).getId());
-    
+
     }
+
+// The same trick will be used here for sorting by oldest.
+
+@Test
+public void ordersByOldestPost() {
+    Post olderPost = repository.save(new Post("Older Post"));
+    Post newerPost = repository.save(new Post("Newer Post"));
+
+    List<Post> posts = repository.findAllByOrderByCreatedAtAsc();
+
+    assertEquals(olderPost.getId(), posts.get(0).getId());
+    assertEquals(newerPost.getId(), posts.get(1).getId());
+}
 }

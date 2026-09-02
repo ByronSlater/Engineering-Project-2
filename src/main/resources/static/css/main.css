@@ -95,6 +95,10 @@ main>.posts {
         display: flex;
         flex-flow: row nowrap;
 
+        &:first-child {
+            margin-top: 0;
+        }
+
         >.post-left {
             >img {
                 float: left;
@@ -124,12 +128,26 @@ main>.posts {
                     margin: 0;
                 }
 
-                .author {
-                    font-weight: bold;
-                    color: primary;
-                    margin-top: 0;
-                    margin-bottom: 0.25rem;
+                .top-row {
+                    display: flex;
+                    flex-flow: row nowrap;
+                    justify-content: space-between;
+                    margin-right: 2rem;
+
+                    .author {
+                        font-weight: bold;
+                        color: primary;
+                        margin-top: 0;
+                        margin-bottom: 0.25rem;
+                    }
+
+                    .created-at {
+                        font-style: italic;
+                        opacity: 0.6;
+                    }
                 }
+
+
             }
 
         }
@@ -209,6 +227,19 @@ input[type="submit"] {
 
     }
 
+}
+
+form.sort-form {
+    text-align: right;
+    padding: 1rem 0 0.5rem;
+
+    > select {
+        background: none;
+        outline: none;
+        border: none;
+        font-style: italic;
+        color: var(--primary);
+    }
 }
 
 form.like-form {

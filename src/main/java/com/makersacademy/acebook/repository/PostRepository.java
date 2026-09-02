@@ -9,5 +9,8 @@ import java.util.List;
 
 public interface PostRepository extends CrudRepository<Post, Long> {
     @EntityGraph(attributePaths = {"comments"}) // tells java to load the comments
-    List<Post> findAllByOrderByIdDesc();
+
+    List<Post> findAllByOrderByCreatedAtDesc(); //retrieve by order newest
+
+    List<Post> findAllByOrderByCreatedAtAsc(); // retrive by order oldest
 }

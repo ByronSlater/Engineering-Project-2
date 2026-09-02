@@ -38,11 +38,12 @@ public class PostsController {
 
 
     @GetMapping("/posts")
-    public String index(Model model) {
-        var posts = postService.allPosts();
+    public String index(@RequestParam(defaultValue = "newest") String sort, Model model) {
+        var posts = postService.allPosts(sort); // it will now sort the posts - AK
 
         model.addAttribute("posts", posts);
         model.addAttribute("post", new Post());
+        model.addAttribute("sort", sort);
 
         model.addAttribute("commentForm", new CommentForm());
         return "posts/index";
