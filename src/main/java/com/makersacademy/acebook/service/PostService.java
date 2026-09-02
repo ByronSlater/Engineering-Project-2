@@ -4,13 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.makersacademy.acebook.model.Comment;
 import com.makersacademy.acebook.model.Post;
-import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.CommentRepository;
 import com.makersacademy.acebook.repository.PostRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -26,7 +23,11 @@ public class PostService {
         this.commentRepository = commentRepository;
     }
 
-    public List<Post> allPosts() {
-        return postRepository.findAllByOrderByIdDesc();
+    public List<Post> allPosts(String sort) {
+        if ("oldest".equals(sort)) {
+            return postRepository.findAllByOrderByCreatedAtAsc();
+        }
+
+        return postRepository.findAllByOrderByCreatedAtDesc();
     }
 }

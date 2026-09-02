@@ -1,11 +1,10 @@
 package com.makersacademy.acebook.model;
 
-import com.makersacademy.acebook.repository.CommentRepository;
-
 import jakarta.persistence.*;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +23,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy("createdAt ASC")
     private List<Comment> comments = new ArrayList<>();
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     // tells java to use the likes table and to connect
     // posts and users together
@@ -49,5 +51,10 @@ public class Post {
 
     public Post(String content) {
         this.content = content;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 }
