@@ -46,6 +46,10 @@
 
     <ul th:each="post : ${posts}">
         <li>
+            <img th:src="@{'/images/' + ${post.user.profile_picture}}"
+                alt="Profile Picture"
+            width="50"
+            height="50">
             <p th:text="${post.content}"></p>
 
             <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" class="like-form">

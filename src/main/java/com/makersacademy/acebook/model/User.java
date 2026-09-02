@@ -14,6 +14,7 @@ public class User {
     private Long id;
     private String username;
     private boolean enabled;
+    private String profile_picture;
 
     public User() {
         this.enabled = TRUE;
