@@ -2,6 +2,10 @@
     <html xmlns:th="http://www.thymeleaf.org"
           xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
     <head lang="en">
+        <link rel="stylesheet" href="/main.css" />
+
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=thumb_up" />
 <!--        Font for body:-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,6 +34,25 @@
                 appearance: none;
                 -webkit-appearance: none;
             }
+            .material-symbols-outlined {
+                font-size: 32px;
+                font-variation-settings:
+                        'FILL' 0,
+                        'wght' 400,
+                        'GRAD' 0,
+                        'opsz' 24;
+
+                transition: 0.2s;
+            }
+
+            .like-button:hover .material-symbols-outlined {
+                color: #1877f2;
+                font-variation-settings:
+                        'FILL' 1,
+                        'wght' 400,
+                        'GRAD' 0,
+                        'opsz' 24;
+            }
 
             .like-count {
                 margin: 0;
@@ -56,13 +79,22 @@
 
     <ul th:each="post : ${posts}">
         <li>
-            <p th:text="${post.content}"></p>
-
+            <p th:text="${post.user.username + ' posted: ' + post.content}"></p>
             <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" class="like-form">
-                <button type="submit" class="like-button">♥</button>
-                <p class="like-count" th:text="${post.likedBy.size()}"></p>
+                <button type="submit" class="like-button">
+                    <span class ="material-symbols-outlined">thumb_up</span>
+                </button>
+
+                <button type="button" class="like-count" th:text="${post.getLikedBy().size()}"
+                        onclick="this.parentElement.nextElementSibling.hidden =
+                        !this.parentElement.nextElementSibling.hidden">
+                </button>
             </form>
-          <p th:text="${post.user.username + ' posted: ' + post.content}"></p>
+            <div hidden>
+                <p th:each="user : ${post.likedBy}"
+                   th:text="${user.username}">
+                </p>
+            </div>
         </li>
     </ul>
 
