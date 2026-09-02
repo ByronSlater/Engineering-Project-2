@@ -20,6 +20,10 @@ public class User {
         this.enabled = TRUE;
     }
 
+    public String getNickName() {
+        return this.username.split("@")[0];
+    }
+
     public User(String username) {
         this.username = username;
         this.enabled = TRUE;

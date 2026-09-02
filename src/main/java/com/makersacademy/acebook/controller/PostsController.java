@@ -104,4 +104,20 @@ public class PostsController {
 
         return "redirect:/posts";
     }
+
+    @PostMapping("/comments/{commentId}/like")
+    public String likeComment(
+            @PathVariable long commentId,
+            @AuthenticationPrincipal OidcUser oidcUser
+    ) {
+        String email = oidcUser.getEmail();
+
+        long loggedInUserId = userRepository.findUserByUsername(email)
+                .orElseThrow(() -> new IllegalStateException("Logged-in user is not registered"))
+                .getId();
+
+        commentService.likeComment(commentId, loggedInUserId);
+
+        return "redirect:/posts";
+    }
 }
