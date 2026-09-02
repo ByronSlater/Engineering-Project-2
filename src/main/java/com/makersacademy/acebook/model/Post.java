@@ -34,6 +34,9 @@ public class Post {
     // want user to like the same post twice
     // the UNIQUE (user_id, post_id) also does this, so technically 2 players of protection
     private Set<User> likedBy = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Post() {}
 

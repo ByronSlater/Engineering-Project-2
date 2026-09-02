@@ -31,7 +31,8 @@
         <link rel="stylesheet" href="/main.css" />
     </head>
     <body>
-
+<!--    wire to navbar:-->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
     <h1>Posts</h1>
 
     <div sec:authorize="isAuthenticated()" id="greeting">
@@ -51,6 +52,7 @@
                 <button type="submit" class="like-button">♥</button>
                 <p class="like-count" th:text="${post.likedBy.size()}"></p>
             </form>
+          <p th:text="${post.user.username + ' posted: ' + post.content}"></p>
         </li>
     </ul>
 

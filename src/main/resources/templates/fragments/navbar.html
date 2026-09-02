@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Navbar</title>-->
+<!--</head>-->
+<body>
+<nav class="navbar" th:fragment="navbar">
+
+<ul>
+  <li class="navbarlogo"><a href="/">Acebook</a></li>
+<!--Home taken away as well because it is the same as clicking on Acebook Logo!-->
+<!--    <li><a href="/">Home</a></li>-->
+<!--    posts and home are the same thing, keeping this commented out-->
+<!--    in case we update anything moving forward-->
+<!--    <li><a href="/posts">Posts</a></li>-->
+    <li><a href="/profile">Profile*</a></li>
+    <li><a href="/friends">My Friends*</a></li>
+    <li><a href="/logout">Logout*</a></li>
+</ul>
+</nav>
+</body>
+</html>
