@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -19,6 +21,9 @@ public class Post {
     private Long id;
     private String content;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("createdAt ASC")
+    private List<Comment> comments = new ArrayList<>();
 
     // tells java to use the likes table and to connect
     // posts and users together
