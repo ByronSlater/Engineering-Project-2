@@ -1,6 +1,8 @@
 package com.makersacademy.acebook.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -9,7 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter
-@ToString(exclude = {"user", "post"})
+@ToString(exclude = {"user", "post", "likedBy"})
 @Entity
 @Table(name = "comments")
 public class Comment {
@@ -31,6 +33,22 @@ public class Comment {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    // One comment can be liked by many users
+    // One user can also like many comments
+    @ManyToMany
+    @JoinTable(
+            name = "comment_likes",
+
+
+            joinColumns = @JoinColumn(name = "comment_id"),
+
+
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+
+
+    private Set<User> likedBy = new HashSet<>();
 
     public Comment() {}
 

@@ -36,4 +36,16 @@ public class CommentService {
 
         return commentRepository.save(comment);
     }
+
+    public Comment likeComment(Long commentId, Long userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        comment.getLikedBy().add(user);
+
+        return commentRepository.save(comment);
+    }
 }
