@@ -2,6 +2,30 @@
     <html xmlns:th="http://www.thymeleaf.org"
           xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
     <head lang="en">
+        <style>
+            .like-form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: fit-content;
+            }
+
+            .like-button {
+                background: transparent;
+                border: none;
+                padding: 0;
+                margin: 0;
+                font-size: 40px;
+                cursor: pointer;
+                appearance: none;
+                -webkit-appearance: none;
+            }
+
+            .like-count {
+                margin: 0;
+                font-size: 12px;
+            }
+        </style>
         <meta charset="UTF-8"/>
         <title>Acebook</title>
         <link rel="stylesheet" href="/main.css" />
@@ -19,8 +43,15 @@
         <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
     </form>
 
-    <ul th:each="post: ${posts}">
-        <li th:text="${post.content}" />
+    <ul th:each="post : ${posts}">
+        <li>
+            <p th:text="${post.content}"></p>
+
+            <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" class="like-form">
+                <button type="submit" class="like-button">♥</button>
+                <p class="like-count" th:text="${post.likedBy.size()}"></p>
+            </form>
+        </li>
     </ul>
 
     </body>
