@@ -9,6 +9,13 @@
     margin-bottom: 0.5rem;;
 }
 
+/*New font:*/
+body{
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+}
+
+
 /*navbar css:*/
 
 .navbar ul {
@@ -22,6 +29,7 @@
 
 .navbarlogo {
     margin-right: auto;
+    font-family: "Major Mono Display", monospace;
 }
 .navbar ul li {
     float: left;
