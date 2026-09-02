@@ -1,0 +1,227 @@
+:root {
+    --accent: #1b264f;
+    --primary: #274690;
+    --secondary: #576ca8;
+    --content: #302b27;
+    --primary-content: #f5f3f5;
+    --surface: #ffffff;
+    --border: #d9dce5;
+    --like-blue: #1877f2;
+}
+
+/* Base layout */
+
+body {
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    color: var(--content);
+    background: linear-gradient(135deg, #eef2fb 0%, #f8f7f4 100%);
+    overflow-y: scroll;
+}
+
+.container {
+    width: min(100% - 2rem, 760px);
+    margin: 0 auto;
+}
+
+h1 {
+    color: var(--accent);
+    letter-spacing: 0;
+}
+
+#greeting {
+    margin: 1rem 0;
+    color: var(--secondary);
+}
+
+/* Post composer and feed */
+
+main > form {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgb(255 255 255 / 78%);
+    box-shadow: 0 4px 14px rgb(27 38 79 / 7%);
+
+    > h2 {
+        margin-top: 0.25rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+main > form input[type="text"],
+.comment-form input[type="text"] {
+    width: min(100%, 30rem);
+    box-sizing: border-box;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font: inherit;
+}
+
+main > .posts {
+    padding: 0;
+
+    > .post {
+        margin: 1rem 0;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        box-shadow: 0 4px 14px rgb(27 38 79 / 7%);
+
+        > .author {
+            font-weight: bold;
+            color: primary;
+            font-size: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        > img {
+            float: left;
+            width: 50px;
+            height: 50px;
+            margin: 0 0.75rem 0.5rem 0;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+}
+
+/* make buttons look a bit nicer */
+button, input[type="submit"] {
+    background-color: var(--primary);
+    color: var(--primary-content);
+
+    outline: none;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+
+    transition: background-color 100ms;
+
+    &:hover {
+        background-color: oklch(from var(--primary) 0.5 c h)
+    }
+}
+
+
+/* Likes */
+.like-button {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.material-symbols-outlined {
+    font-size: 32px;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    transition: 0.2s;
+}
+
+.like-button:hover .material-symbols-outlined {
+    color: var(--like-blue);
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.like-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+}
+
+.like-count {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--secondary);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* Comments */
+.comments {
+    margin: 1rem 0 0 1.25rem;
+    padding-left: 1rem;
+    border-left: 3px solid #dce4f7;
+}
+
+.comment {
+    margin-bottom: 0.75rem;
+
+    p {
+        margin: 0.2rem 0;
+
+        &.author {
+            opacity: 0.4;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+    }
+}
+
+.comment-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-left: 1.25rem;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--accent);
+
+    ul {
+        display: flex;
+        margin: 0 auto;
+        padding: 1rem 0;
+
+        list-style-type: none;
+    }
+
+    li {
+        padding: 0px 0.5rem;
+    }
+
+    a {
+        color: var(--primary-content);
+        text-decoration: none;
+
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        transition: all 200ms;
+
+        &:hover {
+            background-color: #111;
+        }
+    }
+
+    .navbarlogo {
+        flex: 1;
+        font-family: "Major Mono Display", monospace;
+
+        a {
+            text-align: left;
+        }
+    }
+}
+
+
+/* container media query */
+@media (max-width: 600px) {
+    .container {
+        width: min(100% - 1rem, 760px);
+    }
+
+    .comment-form {
+        margin-left: 0;
+    }
+}
