@@ -1,5 +1,7 @@
 package com.makersacademy.acebook.model;
 
+import com.makersacademy.acebook.repository.CommentRepository;
+
 import jakarta.persistence.*;
 
 import lombok.Data;
@@ -43,5 +45,4 @@ public class Post {
     public Post(String content) {
         this.content = content;
     }
-
 }
