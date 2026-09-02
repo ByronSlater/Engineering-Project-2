@@ -1,5 +1,7 @@
 package com.makersacademy.acebook.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.makersacademy.acebook.model.Comment;
@@ -24,12 +26,7 @@ public class PostService {
         this.commentRepository = commentRepository;
     }
 
-    public Comment addCommentToPost(User user, Post post, String commentText) {
-        Comment comment = new Comment(
-            commentText, user, post
-
-        );
-
-        return commentRepository.save(comment);
+    public List<Post> allPosts() {
+        return postRepository.findAllByOrderByIdDesc();
     }
 }

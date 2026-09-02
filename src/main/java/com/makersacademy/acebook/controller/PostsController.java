@@ -8,6 +8,7 @@ import com.makersacademy.acebook.repository.UserRepository;
 
 import com.makersacademy.acebook.service.CommentService;
 
+import com.makersacademy.acebook.service.PostService;
 import jakarta.validation.Valid;
 
 import org.springframework.lang.NonNull;
@@ -23,12 +24,14 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class PostsController {
+    private final PostRepository postRepository;
+    private final PostService postService;
     private final CommentService commentService;
-    final PostRepository repository;
-    final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    PostsController(PostRepository repository, UserRepository userRepository, CommentService commentService) {
-        this.repository = repository;
+    PostsController(UserRepository userRepository, CommentService commentService, PostService postService, PostRepository postRepository) {
+        this.postService = postService;
+        this.postRepository = postRepository;
         this.commentService = commentService;
         this.userRepository = userRepository;
     }
@@ -36,7 +39,8 @@ public class PostsController {
 
     @GetMapping("/posts")
     public String index(Model model) {
-        Iterable<Post> posts = repository.findAllByOrderByIdDesc();
+        var posts = postService.allPosts();
+
         model.addAttribute("posts", posts);
         model.addAttribute("post", new Post());
 
@@ -50,7 +54,7 @@ public class PostsController {
         String username = (String) principal.getAttributes().get("email");
         User user = userRepository.findUserByUsername(username).orElseThrow();
         post.setUser(user);
-        repository.save(post);
+        postRepository.save(post);
         return new RedirectView("/posts");
     }
 
@@ -60,7 +64,7 @@ public class PostsController {
             @AuthenticationPrincipal OidcUser principal) {
 
         // find post that user clicked like on
-        Post post = repository.findById(id).orElseThrow();
+        Post post = postRepository.findById(id).orElseThrow();
 
         // get email address of person logged in
         String username = principal.getEmail();
@@ -72,7 +76,7 @@ public class PostsController {
         post.getLikedBy().add(user);
 
         // save the updated post
-        repository.save(post);
+        postRepository.save(post);
 
         // send user back to posts page
         return new RedirectView("/posts");
@@ -81,7 +85,7 @@ public class PostsController {
     @PostMapping("/posts/{postId}/comments")
     public String addComment(
         @PathVariable long postId,
-        @Valid @ModelAttribute("commentForm") CommentForm commentForm,
+        @Valid @ModelAttribute CommentForm commentForm,
         BindingResult bindingResult,
         RedirectAttributes redirectAttributes,
         @AuthenticationPrincipal OidcUser oidcUser
