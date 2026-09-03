@@ -13,6 +13,7 @@ import com.makersacademy.acebook.service.PostService;
 import jakarta.validation.Valid;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -52,10 +53,19 @@ public class PostsController {
 
         var posts = postService.allPosts(sort, search);
 
+        var user = userRepository.findUserByUsername(oidcUser.getEmail()).orElseThrow();
+        var likedPostIds = posts.stream()
+            .filter(post -> post.getLikedBy().stream()
+                .anyMatch(liker -> user.getUsername().equals(liker.getUsername())))
+            .map(post -> post.getId())
+            .collect(Collectors.toSet());
+
         model.addAttribute("posts", posts);
         model.addAttribute("post", new Post());
         model.addAttribute("sort", sort);
         model.addAttribute("search", search);
+        model.addAttribute("user", user);
+        model.addAttribute("likedPostIds", likedPostIds);
 
         model.addAttribute("commentForm", new CommentForm());
 
@@ -75,7 +85,7 @@ public class PostsController {
         post.setUser(user);
         postRepository.save(post);
 
-        if (file != null) {
+        if (file != null && !file.isEmpty()) {
             try {
                 imageService.addImageToPost(post, file.getBytes());
             } catch (IOException e) {}
@@ -98,8 +108,12 @@ public class PostsController {
         // find the logge din person in the users table
         User user = userRepository.findUserByUsername(username).orElseThrow();
 
-        // add the user to the list of people who liked the post
-        post.getLikedBy().add(user);
+        // add a like if the user hasn't liked it, remove it otherwise
+        if (post.getLikedBy().contains(user)) {
+            post.getLikedBy().remove(user);
+        } else {
+            post.getLikedBy().add(user);
+        }
 
         // save the updated post
         postRepository.save(post);
