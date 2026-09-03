@@ -15,6 +15,9 @@ help:
 	@echo "  make test-one TEST=SignUpTest   Run one specific test class"
 	@echo "  make db-up                      Create local Postgres dev/test databases"
 	@echo "  make db-down                    Drop local Postgres databases"
+	@echo "  make full-clean                 Drops and re-ups dbs, cleans maven, gets users"
+	@echo "  make get-users                  Pulls users from Auth0 into local db"
+	@echo "  make migrate                    Runs flyway migrations on both dbs"
 	@echo "  make clean                      Clean Maven build artifacts"
 
 run:
@@ -22,6 +25,14 @@ run:
 
 run-test:
 	$(MAVEN) spring-boot:run -Dspring-boot.run.profiles=$(TEST_PROFILE)
+
+
+migrate:
+	$(MAVEN) flyway:migrate -Dflyway.url=jdbc:postgresql://localhost:5432/acebook_springboot_development
+	$(MAVEN) flyway:migrate -Dflyway.url=jdbc:postgresql://localhost:5432/acebook_springboot_test
+
+get-users:
+	./get_users.sh
 
 test:
 	$(MAVEN) test
@@ -36,6 +47,8 @@ db-up:
 db-down:
 	dropdb ${DEV_DB} 2>/dev/null || true
 	dropdb ${TEST_DB} 2>/dev/null || true
+
+full-clean: db-down clean db-up migrate get-users
 
 clean:
 	$(MAVEN) clean
