@@ -94,14 +94,14 @@
                                 th:attr="data-likes-target=${'liked-by-' + post.id}" onclick="const list = document.getElementById(this.dataset.likesTarget);
                                     list.hidden = !list.hidden;">
                             </button>
+                            <div class="liked-by-list" th:id="${'liked-by-' + post.id}" hidden>
+                                <p th:each="user : ${post.likedBy}"
+                                    th:text="${#strings.substringBefore(user.username, '@')}">
+                                </p>
+                            </div>
                         </form>
 
 
-                        <div th:id="${'liked-by-' + post.id}" hidden>
-                            <p th:each="user : ${post.likedBy}"
-                                th:text="${#strings.substringBefore(user.username, '@')}">
-                            </p>
-                        </div>
 
                         <form th:if="${post.user.username == loggedInUsername}"
                             th:action="@{/posts/{id}/delete(id=${post.id})}" method="post">
@@ -129,12 +129,12 @@
                                     th:attr="data-likes-target=${'comment-liked-by-' + comment.id}" onclick="const list = document.getElementById(this.dataset.likesTarget);
                                             list.hidden = !list.hidden;">
                                 </button>
+                                <div class="liked-by-list" th:id="${'comment-liked-by-' + comment.id}" hidden>
+                                    <p th:each="user : ${comment.likedBy}"
+                                        th:text="${#strings.substringBefore(user.username, '@')}">
+                                    </p>
+                                </div>
                             </form>
-                            <div th:id="${'comment-liked-by-' + comment.id}" hidden>
-                                <p th:each="user : ${comment.likedBy}"
-                                    th:text="${#strings.substringBefore(user.username, '@')}">
-                                </p>
-                            </div>
                         </div>
 
                     </div>
