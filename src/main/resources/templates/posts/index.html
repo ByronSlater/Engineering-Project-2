@@ -28,9 +28,12 @@
             <h1>Timeline</h1>
 
             <form class="post-form" action="#" th:action="@{/posts}" th:object="${post}" method="post">
-                <h2>What's on your mind..</h2>
+<!--                <h2>What's on your mind..</h2>-->
+
                 <div class="form-group">
-                    <input type="text" th:field="*{content}" />
+                    <input type="text" th:field="*{content}" placeholder ="What's on your mind.."/>
+<!--                    thymeleaf's way of binding this input to the URL:-->
+                    <input type="text" th:field="*{imageUrl}" placeholder="Add an image URL if you'd like.." />
                     <input type="submit" value="Post" />
                 </div>
             </form>
@@ -63,6 +66,10 @@
                                     <p class="created-at" th:text="${#temporals.format(post.getCreatedAt(), 'dd/MM/yyyy')}"></p>
                                 </div>
                                 <p th:text="${post.content}"></p>
+                                <img th:if="${post.imageUrl != null and !post.imageUrl.isEmpty()}"
+                                     th:src="${post.imageUrl}"
+                                     alt="Post image"
+                                     class="post-image" />
                             </div>
 
                             <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" class="like-form">
@@ -110,6 +117,7 @@
                 </div>
             </div>
         </main>
+    </div>
 </body>
 
 </html>
