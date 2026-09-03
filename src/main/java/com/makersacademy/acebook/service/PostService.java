@@ -59,4 +59,14 @@ public class PostService {
         return postRepository.findAllByOrderByCreatedAtDesc();
 
     }
+
+    public void deletePost(Long postId, Long loggedInUserId) {
+        Post post = postRepository.findById(postId).orElseThrow();
+
+        if (!post.getUser().getId().equals(loggedInUserId)) {
+            throw new IllegalStateException("You can only delete your own posts");
+        }
+
+        postRepository.delete(post);
+    }
 }
