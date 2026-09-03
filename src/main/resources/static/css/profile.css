@@ -1,8 +1,18 @@
-.profile-picture{
-    float: left;
-    width: 100px;
-    height: 100px;
-    margin: 0 0.75rem 0.5rem 0;
-    border-radius: 50%;
-    object-fit: cover;
+/* Profile Picture Styling */
+
+
+@media (max-width: 600px) {
+    /* Profile Picture Styling */
+    .profile-picture {
+        width: 75px;
+        height: 75px;
+    }
+
+    main > .posts > .post {
+        flex-direction: column; /* Stack left/right columns vertically on mobile */
+    }
+
+    main > .posts > .post > .post-left {
+        margin-bottom: 0.75rem;
+    }
 }
