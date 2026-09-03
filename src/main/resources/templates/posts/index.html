@@ -27,13 +27,11 @@
         <main>
             <h1>Timeline</h1>
 
-            <form class="post-form" action="#" th:action="@{/posts}" th:object="${post}" method="post">
-<!--                <h2>What's on your mind..</h2>-->
-
+            <form class="post-form" action="#" enctype="multipart/form-data" th:action="@{/posts}" th:object="${post}" method="post">
                 <div class="form-group">
                     <input type="text" th:field="*{content}" placeholder ="What's on your mind.."/>
-<!--                    thymeleaf's way of binding this input to the URL:-->
-                    <input type="text" th:field="*{imageUrl}" placeholder="Add an image URL if you'd like.." />
+                    <label for="file">Select JPEG Image (optional):</label>
+                    <input type="file" id="file" name="file" accept="image/jpeg, image/jpg" required>
                     <input type="submit" value="Post" />
                 </div>
             </form>
@@ -66,8 +64,8 @@
                                     <p class="created-at" th:text="${#temporals.format(post.getCreatedAt(), 'dd/MM/yyyy')}"></p>
                                 </div>
                                 <p th:text="${post.content}"></p>
-                                <img th:if="${post.imageUrl != null and !post.imageUrl.isEmpty()}"
-                                     th:src="${post.imageUrl}"
+                                <img th:each="image : ${post.getImages()}"
+                                     th:src="@{|/images/${image.getImageHash()}.jpg|}"
                                      alt="Post image"
                                      class="post-image" />
                             </div>

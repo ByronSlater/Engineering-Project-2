@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.makersacademy.acebook.model.Image;
+import com.makersacademy.acebook.model.Post;
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.ImageRepository;
 
@@ -32,7 +33,20 @@ public class ImageService {
         imageRepository.save(img);
     }
 
-    public void uploadUnlinkedImage(byte[] imageContent) {
+    public long addImageToPost(Post post, byte[] imageContent) {
+        Image img = new Image();
+
+        String hash = UUID.randomUUID().toString().replace("-", "");
+        img.setImageHash(hash);
+        img.setImageData(imageContent);
+
+        img.setPost(post);
+        imageRepository.save(img);
+
+        return img.getId();
+    }
+
+    public long uploadUnlinkedImage(byte[] imageContent) {
         Image img = new Image();
 
         String hash = UUID.randomUUID().toString().replace("-", "");
@@ -40,5 +54,7 @@ public class ImageService {
         img.setImageData(imageContent);
 
         imageRepository.save(img);
+
+        return img.getId();
     }
 }

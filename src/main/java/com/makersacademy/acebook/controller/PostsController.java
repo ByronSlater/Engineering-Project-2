@@ -8,8 +8,11 @@ import com.makersacademy.acebook.repository.UserRepository;
 
 import com.makersacademy.acebook.service.CommentService;
 
+import com.makersacademy.acebook.service.ImageService;
 import com.makersacademy.acebook.service.PostService;
 import jakarta.validation.Valid;
+
+import java.io.IOException;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,21 +22,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class PostsController {
+    private final ImageService imageService;
     private final PostRepository postRepository;
     private final PostService postService;
     private final CommentService commentService;
     private final UserRepository userRepository;
 
-    PostsController(UserRepository userRepository, CommentService commentService, PostService postService, PostRepository postRepository) {
+    PostsController(UserRepository userRepository, CommentService commentService, PostService postService, PostRepository postRepository, ImageService imageService) {
         this.postService = postService;
         this.postRepository = postRepository;
         this.commentService = commentService;
         this.userRepository = userRepository;
+        this.imageService = imageService;
     }
 
 
@@ -50,12 +56,23 @@ public class PostsController {
     }
 
     @PostMapping("/posts")
-    public RedirectView create(@ModelAttribute @NonNull Post post, @AuthenticationPrincipal DefaultOidcUser principal) {
+    public RedirectView create(
+        @ModelAttribute @NonNull Post post,
+        @AuthenticationPrincipal DefaultOidcUser principal,
+        @RequestParam("file") MultipartFile file
+) {
 
         String username = (String) principal.getAttributes().get("email");
         User user = userRepository.findUserByUsername(username).orElseThrow();
         post.setUser(user);
         postRepository.save(post);
+
+        if (file != null) {
+            try {
+                imageService.addImageToPost(post, file.getBytes());
+            } catch (IOException e) {}
+        }
+
         return new RedirectView("/posts");
     }
 
