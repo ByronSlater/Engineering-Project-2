@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=thumb_up" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=thumb_up,delete,image" />
     <!--        Font for body:-->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
     <!--        Font for Logo:-->
@@ -25,47 +25,37 @@
     <div th:replace="~{fragments/navbar :: navbar}"></div>
     <div class="container">
         <main>
-            <h1>Timeline</h1>
-
-            <form class="post-form" action="#" enctype="multipart/form-data" th:action="@{/posts}" th:object="${post}" method="post">
-                <div class="form-group">
-                    <input type="text" th:field="*{content}" placeholder ="What's on your mind.."/>
-                    <label for="file">Select JPEG Image (optional):</label>
-                    <input type="file" id="file" name="file" accept="image/jpeg, image/jpg" required>
+            <form class="post-form" action="#" enctype="multipart/form-data" th:action="@{/posts}" th:object="${post}"
+                method="post">
+                <img class="avatar" th:src="@{'/images/' + ${user.profile_picture}}" />
+                <input type="text" th:field="*{content}" placeholder="What's on your mind.." />
+                <div class="button-row">
+                    <div></div>
+                    <label class="file-upload material-symbols-outlined" for="file" title="Add an image">image</label>
+                    <input class="file-input" type="file" id="file" name="file" accept="image/jpeg, image/jpg">
+                    <span class="file-status" id="file-status">No image selected</span>
                     <input type="submit" value="Post" />
                 </div>
             </form>
 
             <form class="sort-form" th:action="@{/posts}" method="get">
 
-            <!-- Here I don't want the sorting method to forget the User's current search -->
-            <!-- This means changing the sort keeps the search parameter, for example /posts?sort=oldest&search=Makers -->
+                <!-- Here I don't want the sorting method to forget the User's current search -->
+                <!-- This means changing the sort keeps the search parameter, for example /posts?sort=oldest&search=Makers -->
 
-            <input
-                type="hidden"
-                name="search"
-                th:value="${search}"
-            />
+                <input type="hidden" name="search" th:value="${search}" />
 
-            <select
-                name="sort"
-                id="sort"
-                onchange="this.form.submit()"
-            >
+                <select name="sort" id="sort" onchange="this.form.submit()">
 
-                <option
-                value="newest"
-                th:selected="${sort == 'newest'}">
-                Newest
-                </option>
+                    <option value="newest" th:selected="${sort == 'newest'}">
+                        Newest
+                    </option>
 
-                <option
-                value="oldest"
-                th:selected="${sort == 'oldest'}">
-                Oldest
-                </option>
+                    <option value="oldest" th:selected="${sort == 'oldest'}">
+                        Oldest
+                    </option>
 
-            </select>
+                </select>
             </form>
 
 
@@ -76,96 +66,115 @@
                 <p th:if="${posts.isEmpty() && search != null && !search.isBlank()}">
                     Oops! No posts found for "<span th:text="${search}"></span>". Try another keyword!
                 </p>
+
                 <div class="post" th:each="post : ${posts}">
-                    <div class="post-left">
-                        <img th:src="@{'/images/' + ${post.user.profile_picture}}" alt="Profile Picture" width="50"
-                            height="50">
+                    <img th:src="@{'/images/' + ${post.user.profile_picture}}" class="avatar" alt="Profile Picture"
+                        width="50" height="50" />
+
+                    <div class="post-content">
+                        <div class="top-row">
+                            <p class="author" th:text="${post.user.getNickName()}"></p>
+                            <p class="created-at" th:text="${#temporals.format(post.getCreatedAt(), 'dd/MM/yyyy')}">
+                            </p>
+                        </div>
+
+                        <p th:text="${post.content}"></p>
+                        <img th:if="${post.getImages().size > 0}" th:each="image : ${post.getImages()}"
+                            th:src="@{|/images/${image.getImageHash()}.jpg|}" alt="Post image" class="post-image" />
                     </div>
-                    <div class="post-right">
-                        <div class="above-comments">
-                            <div>
-                                <div class="top-row">
-                                    <p class="author" th:text="${post.user.getNickName()}"></p>
-                                    <p class="created-at" th:text="${#temporals.format(post.getCreatedAt(), 'dd/MM/yyyy')}"></p>
-                                </div>
 
-                                <p th:text="${post.content}"></p>
-                                <img th:each="image : ${post.getImages()}"
-                                     th:src="@{|/images/${image.getImageHash()}.jpg|}"
-                                     alt="Post image"
-                                     class="post-image" />
+                    <div class="right-buttons">
+                        <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" class="like-form">
+                            <button type="submit" class="like-button"
+                                th:classappend="${likedPostIds.contains(post.id)} ? ' active' : ''">
+                                <span class="material-symbols-outlined"
+                                    th:classappend="${likedPostIds.contains(post.id)} ? ' active' : ''">thumb_up</span>
+                            </button>
+                            <button type="button" class="like-count" th:text="${post.getLikedBy().size()}"
+                                th:attr="data-likes-target=${'liked-by-' + post.id}" onclick="const list = document.getElementById(this.dataset.likesTarget);
+                                    list.hidden = !list.hidden;">
+                            </button>
+                        </form>
+
+
+                        <div th:id="${'liked-by-' + post.id}" hidden>
+                            <p th:each="user : ${post.likedBy}"
+                                th:text="${#strings.substringBefore(user.username, '@')}">
+                            </p>
+                        </div>
+
+                        <form th:if="${post.user.username == loggedInUsername}"
+                            th:action="@{/posts/{id}/delete(id=${post.id})}" method="post">
+
+                            <button type="submit" class="delete-button" title="Delete post">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </form>
+
+                    </div>
+
+                    <!-- Comments -->
+                    <div th:if="${post.comments.size() > 0}" class="comments">
+                        <div th:each="comment : ${post.comments}" class="comment">
+                            <div class="comment-content">
+                                <p th:text="${comment.getText()}"></p>
+                                <p th:text="${comment.getUser().getNickName()}" class="author"></p>
                             </div>
-
-
-                            <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" class="like-form">
+                            <form th:action="@{/comments/{id}/like(id=${comment.id})}" method="post" class="like-form">
                                 <button type="submit" class="like-button">
                                     <span class="material-symbols-outlined">thumb_up</span>
                                 </button>
 
-                                <button type="button"
-                                        class="like-count"
-                                        th:text="${post.getLikedBy().size()}"
-                                        th:attr="data-likes-target=${'liked-by-' + post.id}"
-                                        onclick="const list = document.getElementById(this.dataset.likesTarget);
-                                        list.hidden = !list.hidden;">
+                                <button type="button" class="like-count" th:text="${comment.getLikedBy().size()}"
+                                    th:attr="data-likes-target=${'comment-liked-by-' + comment.id}" onclick="const list = document.getElementById(this.dataset.likesTarget);
+                                            list.hidden = !list.hidden;">
                                 </button>
                             </form>
-
-                            <form th:if="${post.user.username == loggedInUsername}"
-                                    th:action="@{/posts/{id}/delete(id=${post.id})}"
-                                    method="post">
-                                <button type="submit">Delete</button>
-                            </form>
-
-                        </div>
-                        <div th:id="${'liked-by-' + post.id}" hidden>
-                            <p th:each="user : ${post.likedBy}"
-                               th:text="${#strings.substringBefore(user.username, '@')}">
-                            </p>
-                        </div>
-
-                        <!-- Comments -->
-                        <div th:if="${post.comments.size() > 0}" class="comments">
-                            <div th:each="comment : ${post.comments}" class="comment">
-                                <div class="comment-content">
-                                    <p th:text="${comment.getText()}"></p>
-                                    <p th:text="${comment.getUser().getNickName()}" class="author"></p>
-                                </div>
-                                <form th:action="@{/comments/{id}/like(id=${comment.id})}" method="post"
-                                    class="like-form">
-                                    <button type="submit" class="like-button">
-                                        <span class="material-symbols-outlined">thumb_up</span>
-                                    </button>
-
-                                    <button type="button"
-                                            class="like-count"
-                                            th:text="${comment.getLikedBy().size()}"
-                                            th:attr="data-likes-target=${'comment-liked-by-' + comment.id}"
-                                            onclick="const list = document.getElementById(this.dataset.likesTarget);
-                                            list.hidden = !list.hidden;">
-                                    </button>
-                                </form>
-                                <div th:id="${'comment-liked-by-' + comment.id}" hidden>
-                                    <p th:each="user : ${comment.likedBy}"
-                                       th:text="${#strings.substringBefore(user.username, '@')}">
-                                    </p>
-                                </div>
+                            <div th:id="${'comment-liked-by-' + comment.id}" hidden>
+                                <p th:each="user : ${comment.likedBy}"
+                                    th:text="${#strings.substringBefore(user.username, '@')}">
+                                </p>
                             </div>
-
                         </div>
-                        <form class="add-comment-form" th:action="@{/posts/{id}/comments(id=${post.id})}"
-                            th:object="${commentForm}" method="post">
-                            <div class="form-group">
-                                <input type="text" th:field="*{text}" placeholder="Write a comment..." required />
-                                <button type="submit">Reply</button>
-                            </div>
-                        </form>
 
                     </div>
+
+                    <form class="add-comment-form" th:action="@{/posts/{id}/comments(id=${post.id})}"
+                        th:object="${commentForm}" method="post">
+                        <div class="form-group">
+                            <input type="text" th:field="*{text}" placeholder="Write a comment..." required />
+                            <button class="button" type="submit">Reply</button>
+                        </div>
+                    </form>
+
                 </div>
             </div>
-        </main>
     </div>
+    </main>
+    </div>
+    <script>
+        const fileInput = document.getElementById('file');
+        const fileStatus = document.getElementById('file-status');
+        const filePreview = document.getElementById('file-preview');
+        let previewUrl;
+
+        fileInput.addEventListener('change',() => {
+            const [file] = fileInput.files;
+
+            if (!file) {
+                fileStatus.textContent = 'No image selected';
+                filePreview.hidden = true;
+                filePreview.removeAttribute('src');
+                return;
+            }
+
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
+
+            fileStatus.textContent = file.name;
+        });
+    </script>
 </body>
 
 </html>
