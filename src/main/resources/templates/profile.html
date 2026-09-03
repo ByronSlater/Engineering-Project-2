@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/main.css" />
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<h1>Profile</h1>
+
+  <h2 th:action="@{/profile}" th:object="${user}" method="get"></h2>
+    <h3 th:text="${user.username}"></h3>
+    <img th:src="@{'/images/' + ${user.profile_picture}}"
+       alt="Profile Picture"
+       width="50"
+       height="50">
+
+    <h4>Posts:</h4>
+    <ul th:each="post : ${posts}">
+        <li>
+            <p th:text="${post.content}"></p>
+        </li>
+    </ul>
+
+
+</body>
+</html>
