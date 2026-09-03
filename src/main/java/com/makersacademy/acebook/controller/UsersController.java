@@ -14,6 +14,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @RestController
 public class UsersController {
@@ -77,8 +78,15 @@ public class UsersController {
         var posts = postService.allPosts(sort, "").stream().filter(post -> post.getUser().getId().equals(user.getId())).toList();
 
         ModelAndView Profile = new ModelAndView("profile");
+        var likedPostIds = posts.stream()
+            .filter(post -> post.getLikedBy().stream()
+                .anyMatch(liker -> user.getUsername().equals(liker.getUsername())))
+            .map(post -> post.getId())
+            .collect(Collectors.toSet());
+
         Profile.addObject("user", user);
         Profile.addObject("posts", posts);
+        Profile.addObject("likedPostIds", likedPostIds);
         return Profile;
     }
 

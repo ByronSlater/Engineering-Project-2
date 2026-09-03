@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link rel="stylesheet" href="/css/normalize.css" />
     <link rel="stylesheet" href="/css/main.css" />
@@ -8,18 +9,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=thumb_up" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=thumb_up" />
     <!--        Font for body:-->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
     <!--        Font for Logo:-->
     <link
-            href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Roboto:ital,wght@0,300;1,300&display=swap"
-            rel="stylesheet">
+        href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Roboto:ital,wght@0,300;1,300&display=swap"
+        rel="stylesheet">
     <meta charset="UTF-8">
 
 
     <title>Title</title>
 </head>
+
 <body>
     <div th:replace="~{fragments/navbar :: navbar}"></div>
     <div class="container">
@@ -28,37 +30,70 @@
 
 
             <div>
-                <img th:src="@{'/images/' + ${user.profile_picture}}"
-                alt="Profile Picture"
-                width="100"
-                height="100"
-                class="profile-picture">
+                <img th:src="@{'/images/' + ${user.profile_picture}}" alt="Profile Picture" width="100" height="100"
+                    class="profile-picture">
                 <h2 th:action="@{/profile}" th:object="${user}" method="get"></h2>
                 <h3 th:text="${user.username}"></h3>
             </div>
 
-        <h4>Posts:</h4>
-
+            <h4>Posts:</h4>
             <div class="posts">
+                <!-- The next three lines inserted here deals with search queries that have no result. Instead of the page being blank/not giving a prompt user response,
+                it will state to the user that there are no posts found for the keyword they are trying to search. -->
+                <p th:if="${posts.isEmpty() && search != null && !search.isBlank()}">
+                    Oops! No posts found for "<span th:text="${search}"></span>". Try another keyword!
+                </p>
+
                 <div class="post" th:each="post : ${posts}">
-                    <div class="post-left">
-                        <img th:src="@{'/images/' + ${post.user.profile_picture}}" alt="Profile Picture" width="50"
-                             height="50">
-                    </div>
-                    <div class="post-right">
-                        <div class="above-comments">
-                            <div>
-                                <div class="top-row">
-                                    <p class="author" th:text="${post.user.getNickName()}"></p>
-                                    <p class="created-at" th:text="${#temporals.format(post.getCreatedAt(), 'dd/MM/yyyy')}"></p>
-                                </div>
-                                <p th:text="${post.content}"></p>
-                            </div>
+                    <img th:src="@{'/images/' + ${post.user.profile_picture}}" class="avatar" alt="Profile Picture"
+                        width="50" height="50" />
+
+                    <div class="post-content">
+                        <div class="top-row">
+                            <p class="author" th:text="${post.user.getNickName()}"></p>
+                            <p class="created-at" th:text="${#temporals.format(post.getCreatedAt(), 'dd/MM/yyyy')}">
+                            </p>
                         </div>
+
+                        <p th:text="${post.content}"></p>
+                        <img th:if="${post.getImages().size > 0}" th:each="image : ${post.getImages()}"
+                            th:src="@{|/images/${image.getImageHash()}.jpg|}" alt="Post image" class="post-image" />
                     </div>
+
+                    <div class="right-buttons">
+                        <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" class="like-form">
+                            <button type="submit" class="like-button"
+                                th:classappend="${likedPostIds.contains(post.id)} ? ' active' : ''">
+                                <span class="material-symbols-outlined"
+                                    th:classappend="${likedPostIds.contains(post.id)} ? ' active' : ''">thumb_up</span>
+                            </button>
+                            <button type="button" class="like-count" th:text="${post.getLikedBy().size()}"
+                                th:attr="data-likes-target=${'liked-by-' + post.id}" onclick="const list = document.getElementById(this.dataset.likesTarget);
+                                    list.hidden = !list.hidden;">
+                            </button>
+                        </form>
+
+
+                        <div class="liked-by-list" th:id="${'liked-by-' + post.id}" hidden>
+                            <p th:each="user : ${post.likedBy}"
+                                th:text="${#strings.substringBefore(user.username, '@')}">
+                            </p>
+                        </div>
+
+                        <form th:if="${post.user.username == loggedInUsername}"
+                            th:action="@{/posts/{id}/delete(id=${post.id})}" method="post">
+
+                            <button type="submit" class="delete-button" title="Delete post">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </form>
+
+                    </div>
+
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 </body>
+
 </html>

@@ -12,6 +12,7 @@
     --comment-divider: #f7f7f7;
     --nav-hover: #111111;
     --like-blue: #1877f2;
+    --alert: #b85c5c;
 }
 
 /* Base layout */
@@ -180,6 +181,10 @@ form.post-form {
 
             border-left: 3px solid var(--comment-border);
 
+            .like-form {
+                margin-right: 1.25rem !important;
+            }
+
             >.comment {
                 padding-left: 1rem;
                 border-bottom: 2px solid var(--comment-divider);
@@ -318,6 +323,34 @@ form.sort-form {
         border: none;
         font-style: italic;
         color: var(--primary);
+    }
+}
+
+.liked-by-list {
+    position: relative;
+
+    > p {
+        position: absolute;
+        transform: translateX(-50%);
+        background: oklch(from var(--primary) 0.6 c h);
+        padding: 0.5rem 1.25rem;
+        border-radius: 0.25rem;
+        color: var(--primary-content);
+        margin: 0;
+    }
+}
+
+.delete-button {
+    color: var(--alert);
+    font-size: 1.5rem;
+
+    > .material-symbols-outlined {
+        font-size: 1.75rem;
+    }
+
+    &:hover {
+        color: oklch(from var(--alert) calc(l - 0.08) c h);
+        transform: scale(1.1);
     }
 }
 
