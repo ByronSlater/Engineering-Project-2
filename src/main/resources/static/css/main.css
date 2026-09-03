@@ -308,6 +308,26 @@ form.like-form {
             text-align: left;
         }
     }
+
+    .navbar-search {
+    form {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    input[type="text"] {
+        width: 180px;
+        padding: 0.4rem 0.6rem;
+        border: none;
+        border-radius: 0.4rem;
+        outline: none;
+    }
+
+    button {
+        padding: 0.4rem 0.7rem;
+    }
+}
 }
 
 

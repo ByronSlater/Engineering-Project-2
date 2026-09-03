@@ -9,6 +9,31 @@
 
 <ul class="container">
   <li class="navbarlogo"><a href="/">Acebook</a></li>
+
+  <!-- Implementation of the searchbar in the navigation bar -->
+
+  <li class="navbar-search">
+    <form th:action="@{/posts}" method="get">
+      <input
+        type="text"
+        name="search"
+        th:value="${search}"
+        placeholder="Search posts..."
+        />
+
+        <!-- Here I don't want the search method to forget the sorting preference of the User -->
+        <!-- The line with th:value below this comment means the browser sends /posts?search=Makers&sort=oldest rather than just /posts?search=Makers as an example -->
+
+        <input 
+        type="hidden"
+        name="sort"
+        th:value="${sort !=null ? sort : newest}"
+        />
+
+        <button type="submit">Search</button>
+    </form>
+  </li>
+
     <li><a href="/profile">Profile*</a></li>
     <li><a href="/friends">My Friends*</a></li>
     <li><a href="/logout">Logout*</a></li>
