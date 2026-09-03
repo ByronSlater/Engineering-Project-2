@@ -20,10 +20,8 @@ public class Post {
     private Long id;
     private String content;
 
-//    migration creates the column as image_url,
-//    so being explicit means there won't be issues mapping over this later on:
-    @Column(name = "image_url")
-    private String imageUrl;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Image> images;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy("createdAt ASC")
@@ -52,11 +50,8 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Post(String content) { this.content = content; }
     public Post() {}
-
-    public Post(String content) {
-        this.content = content;
-    }
 
     @PrePersist
     protected void onCreate() {
