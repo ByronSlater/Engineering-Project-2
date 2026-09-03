@@ -75,13 +75,18 @@
                                     <span class="material-symbols-outlined">thumb_up</span>
                                 </button>
 
-                                <button type="button" class="like-count" th:text="${post.getLikedBy().size()}" onclick="this.parentElement.nextElementSibling.hidden =
-                                !this.parentElement.nextElementSibling.hidden">
+                                <button type="button"
+                                        class="like-count"
+                                        th:text="${post.getLikedBy().size()}"
+                                        th:attr="data-likes-target=${'liked-by-' + post.id}"
+                                        onclick="const list = document.getElementById(this.dataset.likesTarget);
+                                        list.hidden = !list.hidden;">
                                 </button>
                             </form>
                         </div>
-                        <div hidden>
-                            <p th:each="user : ${post.likedBy}" th:text="${user.username}">
+                        <div th:id="${'liked-by-' + post.id}" hidden>
+                            <p th:each="user : ${post.likedBy}"
+                               th:text="${#strings.substringBefore(user.username, '@')}">
                             </p>
                         </div>
 
@@ -98,8 +103,19 @@
                                         <span class="material-symbols-outlined">thumb_up</span>
                                     </button>
 
-                                    <p class="like-count" th:text="${comment.getLikedBy().size()}"></p>
+                                    <button type="button"
+                                            class="like-count"
+                                            th:text="${comment.getLikedBy().size()}"
+                                            th:attr="data-likes-target=${'comment-liked-by-' + comment.id}"
+                                            onclick="const list = document.getElementById(this.dataset.likesTarget);
+                                            list.hidden = !list.hidden;">
+                                    </button>
                                 </form>
+                                <div th:id="${'comment-liked-by-' + comment.id}" hidden>
+                                    <p th:each="user : ${comment.likedBy}"
+                                       th:text="${#strings.substringBefore(user.username, '@')}">
+                                    </p>
+                                </div>
                             </div>
 
                         </div>
