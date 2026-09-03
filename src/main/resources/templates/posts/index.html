@@ -71,7 +71,7 @@
 
             <!-- Posts -->
             <div class="posts">
-                <!-- The next three lines inserted here deals with search queries that have no result. Instead of the page being blank/not giving a prompt user response, 
+                <!-- The next three lines inserted here deals with search queries that have no result. Instead of the page being blank/not giving a prompt user response,
                 it will state to the user that there are no posts found for the keyword they are trying to search. -->
                 <p th:if="${posts.isEmpty() && search != null && !search.isBlank()}">
                     Oops! No posts found for "<span th:text="${search}"></span>". Try another keyword!
@@ -88,12 +88,14 @@
                                     <p class="author" th:text="${post.user.getNickName()}"></p>
                                     <p class="created-at" th:text="${#temporals.format(post.getCreatedAt(), 'dd/MM/yyyy')}"></p>
                                 </div>
+
                                 <p th:text="${post.content}"></p>
                                 <img th:each="image : ${post.getImages()}"
                                      th:src="@{|/images/${image.getImageHash()}.jpg|}"
                                      alt="Post image"
                                      class="post-image" />
                             </div>
+
 
                             <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" class="like-form">
                                 <button type="submit" class="like-button">
@@ -108,6 +110,13 @@
                                         list.hidden = !list.hidden;">
                                 </button>
                             </form>
+
+                            <form th:if="${post.user.username == loggedInUsername}"
+                                    th:action="@{/posts/{id}/delete(id=${post.id})}"
+                                    method="post">
+                                <button type="submit">Delete</button>
+                            </form>
+
                         </div>
                         <div th:id="${'liked-by-' + post.id}" hidden>
                             <p th:each="user : ${post.likedBy}"

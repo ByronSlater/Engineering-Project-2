@@ -47,6 +47,7 @@ public class PostsController {
     public String index(
             @RequestParam(name = "sort", defaultValue = "newest") String sort,
             @RequestParam(name = "search", defaultValue = "") String search, // second request parameter for searching through posts, the default value means that simply visiting /posts should still work
+            @AuthenticationPrincipal OidcUser oidcUser,
             Model model) {
 
         var posts = postService.allPosts(sort, search);
@@ -58,6 +59,7 @@ public class PostsController {
 
         model.addAttribute("commentForm", new CommentForm());
 
+        model.addAttribute("loggedInUsername", oidcUser.getEmail());
         return "posts/index";
     }
 
@@ -144,4 +146,21 @@ public class PostsController {
 
         return "redirect:/posts";
     }
+
+    @PostMapping("/posts/{postId}/delete")
+    public String deletePost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal OidcUser oidcUser
+    ) {
+        String email = oidcUser.getEmail();
+
+        Long loggedInUserId = userRepository.findUserByUsername(email)
+                .orElseThrow(() -> new IllegalStateException("Logged-in user is not registered"))
+                .getId();
+
+        postService.deletePost(postId, loggedInUserId);
+
+        return "redirect:/posts";
+    }
+
 }
