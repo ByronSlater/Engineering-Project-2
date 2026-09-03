@@ -11,8 +11,6 @@ import com.makersacademy.acebook.service.CommentService;
 import com.makersacademy.acebook.service.PostService;
 import jakarta.validation.Valid;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;

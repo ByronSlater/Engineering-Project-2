@@ -146,8 +146,10 @@ main>.posts {
                         opacity: 0.6;
                     }
                 }
-
-
+                .post-image{
+                    max-width: 300px;
+                    margin-top: 1rem;
+                }
             }
 
         }
