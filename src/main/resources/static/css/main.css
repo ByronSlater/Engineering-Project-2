@@ -312,7 +312,7 @@ form.like-form {
 /* container media query */
 @media (max-width: 600px) {
     .container {
-        width: min(100% - 1rem, 760px);
+        width: 100%;
     }
 
     .comment-form {
