@@ -173,38 +173,37 @@ form.post-form {
         >.comments {
             margin-top: 1rem;
             grid-area: comments;
-            display: flex;
-            flex-flow: column nowrap;
+            display: grid;
+            grid-template-columns: subgrid;
             gap: 0.75rem;
 
             background-color: oklch(from var(--primary) l c h / 0.02);
 
             border-left: 3px solid var(--comment-border);
 
-            .like-form {
-                margin-right: 1.25rem !important;
-            }
-
             >.comment {
                 padding-left: 1rem;
+                grid-column: 1 / 3;
                 border-bottom: 2px solid var(--comment-divider);
 
-                display: flex;
+                display: grid;
+                grid-template-columns: subgrid;
                 flex-flow: row nowrap;
 
                 >.like-form {
-                    margin: 0.5rem;
+                    margin: 0.5rem auto;
                 }
 
                 >.comment-content {
                     flex: 1;
+                    padding-top: 0.4rem;
 
                     >p {
                         margin: 0.2rem 0;
 
                         &.author {
-                            opacity: 0.4;
-                            font-size: 0.7rem;
+                            opacity: 0.6;
+                            font-size: 0.9rem;
                             font-style: italic;
                         }
                     }
