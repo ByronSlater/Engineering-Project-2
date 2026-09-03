@@ -23,11 +23,40 @@ public class PostService {
         this.commentRepository = commentRepository;
     }
 
-    public List<Post> allPosts(String sort) {
+    // Dealing with sort and search
+
+    // the new logic here is as follows:
+
+    // Is there a search?
+    // │
+    // ├── YES
+    // │    │
+    // │    ├── oldest? → search + ascending
+    // │    │
+    // │    └── newest? → search + descending
+    // │
+    // └── NO
+    //     │
+    //     ├── oldest? → all + ascending
+    //     │
+    //     └── newest? → all + descending
+
+    public List<Post> allPosts(String sort, String search) {
+
+        if (search != null && !search.isBlank()) {
+
+            if ("oldest".equals(sort)) {
+                return postRepository.findByContentContainingIgnoreCaseOrderByCreatedAtAsc(search.trim()); // search.trim() deals with accidental whitespace before or after a search
+            }
+
+            return postRepository.findByContentContainingIgnoreCaseOrderByCreatedAtDesc(search.trim());
+        }
+
         if ("oldest".equals(sort)) {
             return postRepository.findAllByOrderByCreatedAtAsc();
         }
 
         return postRepository.findAllByOrderByCreatedAtDesc();
+
     }
 }

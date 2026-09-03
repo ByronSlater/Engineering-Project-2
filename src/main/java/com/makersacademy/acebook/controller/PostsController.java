@@ -44,14 +44,20 @@ public class PostsController {
 
 
     @GetMapping("/posts")
-    public String index(@RequestParam(defaultValue = "newest") String sort, Model model) {
-        var posts = postService.allPosts(sort); // it will now sort the posts - AK
+    public String index(
+            @RequestParam(name = "sort", defaultValue = "newest") String sort,
+            @RequestParam(name = "search", defaultValue = "") String search, // second request parameter for searching through posts, the default value means that simply visiting /posts should still work
+            Model model) {
+
+        var posts = postService.allPosts(sort, search);
 
         model.addAttribute("posts", posts);
         model.addAttribute("post", new Post());
         model.addAttribute("sort", sort);
+        model.addAttribute("search", search);
 
         model.addAttribute("commentForm", new CommentForm());
+
         return "posts/index";
     }
 

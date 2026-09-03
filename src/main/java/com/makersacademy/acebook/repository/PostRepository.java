@@ -13,4 +13,20 @@ public interface PostRepository extends CrudRepository<Post, Long> {
     List<Post> findAllByOrderByCreatedAtDesc(); //retrieve by order newest
 
     List<Post> findAllByOrderByCreatedAtAsc(); // retrive by order oldest
+
+    // These Spring method names mean:
+
+    // findBy
+    // │
+    // ├── Content
+    // │
+    // ├── Containing
+    // │
+    // ├── IgnoreCase
+    // │
+    // └── OrderBy CreatedAt Descending/Ascending
+
+    List<Post> findByContentContainingIgnoreCaseOrderByCreatedAtDesc(String search);
+
+    List<Post> findByContentContainingIgnoreCaseOrderByCreatedAtAsc(String search);
 }

@@ -37,20 +37,45 @@
             </form>
 
             <form class="sort-form" th:action="@{/posts}" method="get">
-                <select name="sort" id="sort" onchange="this.form.submit()">
-                    <option value="newest" th:selected="${sort == 'newest'}">
-                        Newest
-                    </option>
 
-                    <option value="oldest" th:selected="${sort == 'oldest'}">
-                        Oldest
-                    </option>
-                </select>
+            <!-- Here I don't want the sorting method to forget the User's current search -->
+            <!-- This means changing the sort keeps the search parameter, for example /posts?sort=oldest&search=Makers -->
+
+            <input
+                type="hidden"
+                name="search"
+                th:value="${search}"
+            />
+
+            <select
+                name="sort"
+                id="sort"
+                onchange="this.form.submit()"
+            >
+
+                <option
+                value="newest"
+                th:selected="${sort == 'newest'}">
+                Newest
+                </option>
+
+                <option
+                value="oldest"
+                th:selected="${sort == 'oldest'}">
+                Oldest
+                </option>
+
+            </select>
             </form>
 
 
             <!-- Posts -->
             <div class="posts">
+                <!-- The next three lines inserted here deals with search queries that have no result. Instead of the page being blank/not giving a prompt user response, 
+                it will state to the user that there are no posts found for the keyword they are trying to search. -->
+                <p th:if="${posts.isEmpty() && search != null && !search.isBlank()}">
+                    Oops! No posts found for "<span th:text="${search}"></span>". Try another keyword!
+                </p>
                 <div class="post" th:each="post : ${posts}">
                     <div class="post-left">
                         <img th:src="@{'/images/' + ${post.user.profile_picture}}" alt="Profile Picture" width="50"
