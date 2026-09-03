@@ -71,9 +71,10 @@ public class UsersController {
     }
 
     @GetMapping("/profile/{id}")
-    public ModelAndView DisplayProfile (@PathVariable Long id, @RequestParam(defaultValue = "newest") String sort){
+    public ModelAndView DisplayProfile (
+        @PathVariable Long id, @RequestParam(defaultValue = "newest") String sort){
         User user = userRepository.findById(id).orElseThrow();
-        var posts = postService.allPosts(sort).stream().filter(post -> post.getUser().getId().equals(user.getId())).toList();
+        var posts = postService.allPosts(sort, "").stream().filter(post -> post.getUser().getId().equals(user.getId())).toList();
 
         ModelAndView Profile = new ModelAndView("profile");
         Profile.addObject("user", user);
