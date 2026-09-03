@@ -111,6 +111,7 @@ form.post-form {
         flex-flow: row nowrap;
         align-items: center;
         justify-content: space-between;
+        margin-left: 2rem;
 
         >.file-input {
             position: absolute;

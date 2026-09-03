@@ -30,7 +30,6 @@
                 <img class="avatar" th:src="@{'/images/' + ${user.profile_picture}}" />
                 <input type="text" th:field="*{content}" placeholder="What's on your mind.." />
                 <div class="button-row">
-                    <div></div>
                     <label class="file-upload material-symbols-outlined" for="file" title="Add an image">image</label>
                     <input class="file-input" type="file" id="file" name="file" accept="image/jpeg, image/jpg">
                     <span class="file-status" id="file-status">No image selected</span>
