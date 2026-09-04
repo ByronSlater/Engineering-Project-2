@@ -1,5 +1,6 @@
 package com.makersacademy.acebook.service;
 
+import com.makersacademy.acebook.repository.UserRepository;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -14,10 +15,12 @@ import jakarta.transaction.Transactional;
 @Service
 @Transactional
 public class ImageService {
+    private final UserRepository userRepository;
     private final ImageRepository imageRepository;
 
-    public ImageService(ImageRepository ImageRepository) {
+    public ImageService(ImageRepository ImageRepository, UserRepository userRepository) {
         this.imageRepository = ImageRepository;
+        this.userRepository = userRepository;
     }
 
     public void setProfilePicture(User user, byte[] imageContent) {
@@ -31,6 +34,9 @@ public class ImageService {
         img.setImageData(imageContent);
 
         imageRepository.save(img);
+
+        user.setProfilePicture(img);
+        userRepository.save(user);
     }
 
     public long addImageToPost(Post post, byte[] imageContent) {

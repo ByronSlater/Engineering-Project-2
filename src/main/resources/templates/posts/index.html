@@ -27,7 +27,7 @@
         <main>
             <form class="post-form" action="#" enctype="multipart/form-data" th:action="@{/posts}" th:object="${post}"
                 method="post">
-                <img class="avatar" th:src="@{'/images/' + ${user.profile_picture}}" />
+                <img class="avatar" th:src="${user.getImageLink()}" alt="Your profile picture" />
                 <input type="text" th:field="*{content}" placeholder="What's on your mind.." />
                 <div class="button-row">
                     <label class="file-upload material-symbols-outlined" for="file" title="Add an image">image</label>
@@ -67,7 +67,7 @@
                 </p>
 
                 <div class="post" th:each="post : ${posts}">
-                    <img th:src="@{'/images/' + ${post.user.profile_picture}}" class="avatar" alt="Profile Picture"
+                    <img th:src="${post.getUser().getImageLink()}" class="avatar" alt="Profile Picture"
                         width="50" height="50" />
 
                     <div class="post-content">

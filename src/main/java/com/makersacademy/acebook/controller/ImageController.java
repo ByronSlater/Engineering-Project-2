@@ -3,11 +3,14 @@ package com.makersacademy.acebook.controller;
 import com.makersacademy.acebook.model.Image;
 import com.makersacademy.acebook.repository.ImageRepository;
 
+import com.makersacademy.acebook.repository.UserRepository;
 import java.io.IOException;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,13 +25,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class ImageController {
+    private final UserRepository userRepository;
     private final ImageService imageService;
     private final ImageRepository imageRepository;
 
     public ImageController(
         ImageService imageService,
-        ImageRepository imageRepository
+        ImageRepository imageRepository,
+        UserRepository userRepository
     ) {
+        this.userRepository = userRepository;
         this.imageService = imageService;
         this.imageRepository = imageRepository;
     }
@@ -38,6 +44,27 @@ public class ImageController {
         model.addAttribute("images", imageRepository.findAll());
 
         return "images";
+    }
+
+    @PostMapping("/upload_pp/{id}")
+    public RedirectView uploadPP(
+        @PathVariable("id") long id,
+        @RequestParam("file") MultipartFile file,
+        @AuthenticationPrincipal DefaultOidcUser principal
+    ) {
+
+        var user = userRepository.findUserByUsername(principal.getEmail()).get();
+
+        // prevent users from uploading pps for other people
+        if (user.getId() != id) {
+            return new RedirectView("/profile/" + id);
+        }
+
+        try {
+            imageService.setProfilePicture(user, file.getBytes());
+        } catch(IOException e) {}
+
+        return new RedirectView("/profile/" + id);
     }
 
     @GetMapping("/images/{hash}.jpg")

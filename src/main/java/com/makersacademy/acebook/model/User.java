@@ -14,12 +14,23 @@ public class User {
     private Long id;
     private String username;
     private boolean enabled;
-    private String profile_picture;
     private String bio;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id")
+    private Image profilePicture;
+
+    public String getImageLink() {
+        if (this.profilePicture == null) {
+            return "/image/pfp_cat1.jpg";
+        }
+        return "/images/" + this.profilePicture.getImageHash() + ".jpg";
+    }
 
     public User() {
         this.enabled = TRUE;
     }
+
 
     public String getNickName() {
         return this.username.split("@")[0];

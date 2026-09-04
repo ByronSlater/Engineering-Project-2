@@ -49,7 +49,6 @@ public class UsersController {
                 .findUserByUsername(username)
                 .orElseGet(() -> {
                     User user = new User(username);
-                    user.setProfile_picture(GetRandompp());
                     return userRepository.save(user);
                 });
 
@@ -101,7 +100,7 @@ public class UsersController {
         String friendRequestStatus;
 
         if (loggedInUser == user) {
-            friendRequestStatus = "none";
+            friendRequestStatus = "same user";
         } else {
             friendRequestStatus = friendService.getFriendshipStatus(loggedInUser, user);
         }
