@@ -82,6 +82,13 @@ public class PostsController {
 
         String username = (String) principal.getAttributes().get("email");
         User user = userRepository.findUserByUsername(username).orElseThrow();
+        // addition here for highlighting excess characters
+        post.setContent(
+            postService.validateAndTrimPostContent(
+                post.getContent()
+            )
+        );
+        // new addition ends
         post.setUser(user);
         postRepository.save(post);
 

@@ -84,9 +84,14 @@ h1 {
 form.post-form {
     display: grid;
 
+    /* Editing this section so that it makes the character counter sit neatly */
+
     grid-template-areas:
         "avatar text"
+        "blank  counter"
         "blank  button-row";
+
+    /* end of new implementation, the only addition here is blank counter */
 
     grid-template-columns: 0fr 1fr;
 
@@ -103,12 +108,37 @@ form.post-form {
         grid-area: avatar;
     }
 
-    >input[type="text"] {
+    /* Changing the post-form grid CSS because the selector won't work with the highlight-excess functionality */
+
+    >.post-character-field {
         grid-area: text;
-        border-width: 0 0 2px 0;
-        border: black;
-        outline: 0;
     }
+
+    >.post-character-field input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+
+        padding: 0.25rem 0;
+
+        border: none;
+        border-bottom: 2px solid transparent;
+
+        outline: none;
+    }
+
+    >.post-character-field input[type="text"]:focus {
+        border-bottom-color: var(--primary);
+    }
+
+    /* specific css for character count */
+
+    >.character-count {
+    grid-area: counter;
+    text-align: center;
+    margin: 0.35rem 0;
+    }
+
+    /* specific css addition ends here */
 
     >.button-row {
         grid-area: button-row;
@@ -149,6 +179,71 @@ form.post-form {
         }
     }
 }
+
+    /* Wrapper for character-limited fields and their highlight layer */
+
+    .character-field-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    /*
+    The highlight layer sits behind the real input/textarea.
+
+    Its text is transparent — we only want to see the background
+    behind characters which have gone over the limit.
+    */
+    .character-highlight {
+        position: absolute;
+        inset: 0;
+
+        box-sizing: border-box;
+
+        pointer-events: none;
+        overflow: hidden;
+
+        color: transparent;
+
+        font-family: inherit;
+        font-size: inherit;
+
+        z-index: 0;
+    }
+
+    /*
+    The real field remains on top so the user is still typing
+    into a normal input/textarea.
+    */
+    .character-field-wrapper .character-limited {
+        position: relative;
+        z-index: 1;
+
+        background-color: transparent;
+    }
+
+    /* New-post input is a single line */
+    .character-field-wrapper.single-line .character-highlight {
+        white-space: pre;
+        padding: 0.25rem 0;
+    }
+
+    /* Edit form textarea can wrap onto multiple lines */
+    .character-field-wrapper.multi-line .character-highlight {
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+
+        padding: 0.75rem;
+
+        /* Matches the textarea's existing border spacing */
+        border: 1px solid transparent;
+
+        line-height: 1.15;
+    }
+
+    /* The actual characters beyond the allowed limit */
+    .character-highlight .overflow-text {
+        background-color: rgba(184, 92, 92, 0.3);
+    }
 
 .posts {
     >.post {
@@ -287,6 +382,7 @@ button {
 }
 
 .button,
+button[type="submit"],
 input[type="submit"] {
     background-color: var(--primary);
     color: var(--primary-content);
@@ -309,6 +405,17 @@ input[type="submit"] {
     }
 }
 
+/* Visually show when a form cannot currently be submitted */
+button[type="submit"]:disabled,
+input[type="submit"]:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+button[type="submit"]:disabled:hover,
+input[type="submit"]:disabled:hover {
+    background-color: var(--primary);
+}
 
 
 .material-symbols-outlined {
@@ -522,6 +629,8 @@ form.like-form {
 
 
 
+/* Edit post container */
+
 .edit-post-container {
     max-width: 760px;
     margin: 3rem auto;
@@ -533,6 +642,7 @@ form.like-form {
 
     border: 1px solid #d8dce5;
     border-radius: 0.5rem;
+    line-height: 1.35;
 
     padding: 1.5rem;
 
@@ -593,6 +703,35 @@ form.like-form {
 .cancel-button:hover {
     background-color: #f3f5fa;
 }
+
+/* Character Count CSS */
+
+.character-count {
+    margin-top: 0.25rem;
+    text-align: right;
+
+    font-size: 0.8rem;
+    color: #777;
+
+    transition: color 150ms ease;
+}
+
+.character-count.near-limit {
+    color: #c35a00;
+    font-weight: 600;
+}
+
+.character-count.at-limit {
+    color: #b00020;
+    font-weight: 700;
+}
+
+.character-count.over-limit {
+    color: var(--alert);
+    font-weight: 700;
+}
+
+/* End Character Count CSS */
 
 /* container media query */
 @media (max-width: 600px) {

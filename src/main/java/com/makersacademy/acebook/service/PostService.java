@@ -99,15 +99,25 @@ public class PostService {
             throw new IllegalStateException("Your post content cannot be left empty!");
         }
 
-        String updatedContent = newContent.trim(); // Get rid of any front trailing whitespace
-
-        if (updatedContent.length() > 250) { // if the post is over 250 characters long
-            throw new IllegalArgumentException("Your post cannot exceed 250 characters.");
-        }
-
-        post.setContent(updatedContent);
-
-        postRepository.save(post);
+        // refactored it to simplify old code
+        String updatedContent =
+                validateAndTrimPostContent(newContent);
     }
+
+    // The server should now protect new posts based on the highlighting CSS
+
+    public String validateAndTrimPostContent(String content) {
+
+    String trimmedContent =
+            content == null ? "" : content.trim();
+
+    if (trimmedContent.length() > 250) {
+        throw new IllegalArgumentException(
+                "Your post cannot exceed 250 characters."
+        );
+    }
+
+    return trimmedContent;
+}
 
 }
