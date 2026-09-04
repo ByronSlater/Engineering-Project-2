@@ -19,6 +19,7 @@
 
     <meta charset="UTF-8" />
     <title>Edit Post | Acebook</title>
+    <script src="/js/character-counter.js" defer></script>
 </head>
 
 <body>
@@ -33,8 +34,32 @@
 
             <form th:action="@{/posts/{id}/edit(id=${post.id})}" method="post">
 
-                <textarea name="content" th:text="${post.content}" maxlength="250" required>
-            </textarea>
+            <!-- Character counter and overflow highlighting -->
+
+            <div class="character-field-wrapper multi-line">
+
+                <!-- Mirror layer used to highlight characters beyond 250 -->
+                <div
+                    class="character-highlight"
+                    aria-hidden="true">
+                </div>
+
+                <textarea
+                    class="character-limited"
+                    name="content"
+                    th:text="${post.content}"
+                    data-maxlength="250"
+                    required>
+                </textarea>
+
+            </div>
+
+            <p class="character-count" aria-live="polite">
+                <span class="characters-remaining">250</span>
+                <span class="character-count-label">characters left</span>
+            </p>
+
+            <!-- End character counter and overflow highlighting -->
 
                 <div class="edit-post-actions">
                     <a th:href="@{/posts}" class="cancel-button">
