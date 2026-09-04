@@ -133,9 +133,10 @@ form.post-form {
     /* specific css for character count */
 
     >.character-count {
-    grid-area: counter;
-    text-align: center;
-    margin: 0.35rem 0;
+        grid-area: counter;
+        text-align: right;
+        margin: 1.5rem 0.5rem;
+        margin-top: 0;
     }
 
     /* specific css addition ends here */
@@ -180,70 +181,70 @@ form.post-form {
     }
 }
 
-    /* Wrapper for character-limited fields and their highlight layer */
+/* Wrapper for character-limited fields and their highlight layer */
 
-    .character-field-wrapper {
-        position: relative;
-        width: 100%;
-    }
+.character-field-wrapper {
+    position: relative;
+    width: 100%;
+}
 
-    /*
+/*
     The highlight layer sits behind the real input/textarea.
 
     Its text is transparent — we only want to see the background
     behind characters which have gone over the limit.
     */
-    .character-highlight {
-        position: absolute;
-        inset: 0;
+.character-highlight {
+    position: absolute;
+    inset: 0;
 
-        box-sizing: border-box;
+    box-sizing: border-box;
 
-        pointer-events: none;
-        overflow: hidden;
+    pointer-events: none;
+    overflow: hidden;
 
-        color: transparent;
+    color: transparent;
 
-        font-family: inherit;
-        font-size: inherit;
+    font-family: inherit;
+    font-size: inherit;
 
-        z-index: 0;
-    }
+    z-index: 0;
+}
 
-    /*
+/*
     The real field remains on top so the user is still typing
     into a normal input/textarea.
     */
-    .character-field-wrapper .character-limited {
-        position: relative;
-        z-index: 1;
+.character-field-wrapper .character-limited {
+    position: relative;
+    z-index: 1;
 
-        background-color: transparent;
-    }
+    background-color: transparent;
+}
 
-    /* New-post input is a single line */
-    .character-field-wrapper.single-line .character-highlight {
-        white-space: pre;
-        padding: 0.25rem 0;
-    }
+/* New-post input is a single line */
+.character-field-wrapper.single-line .character-highlight {
+    white-space: pre;
+    padding: 0.25rem 0;
+}
 
-    /* Edit form textarea can wrap onto multiple lines */
-    .character-field-wrapper.multi-line .character-highlight {
-        white-space: pre-wrap;
-        overflow-wrap: break-word;
+/* Edit form textarea can wrap onto multiple lines */
+.character-field-wrapper.multi-line .character-highlight {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 
-        padding: 0.75rem;
+    padding: 0.75rem;
 
-        /* Matches the textarea's existing border spacing */
-        border: 1px solid transparent;
+    /* Matches the textarea's existing border spacing */
+    border: 1px solid transparent;
 
-        line-height: 1.15;
-    }
+    line-height: 1.15;
+}
 
-    /* The actual characters beyond the allowed limit */
-    .character-highlight .overflow-text {
-        background-color: rgba(184, 92, 92, 0.3);
-    }
+/* The actual characters beyond the allowed limit */
+.character-highlight .overflow-text {
+    background-color: rgba(184, 92, 92, 0.3);
+}
 
 .posts {
     >.post {
@@ -452,7 +453,7 @@ form.sort-form {
 .liked-by-list {
     position: relative;
 
-    > p {
+    >p {
         position: absolute;
         transform: translateX(-50%);
         background: oklch(from var(--primary) 0.6 c h);
@@ -471,10 +472,11 @@ form.sort-form {
     color: var(--primary);
 }
 
-.delete-button, .edit-button {
+.delete-button,
+.edit-button {
     font-size: 1.5rem;
 
-    > .material-symbols-outlined {
+    >.material-symbols-outlined {
         font-size: 1.75rem;
     }
 
@@ -516,7 +518,7 @@ form.like-form {
     }
 }
 
-.like-button > .material-symbols-outlined.active {
+.like-button>.material-symbols-outlined.active {
     color: var(--primary);
     font-variation-settings: 'FILL' 1;
 }
