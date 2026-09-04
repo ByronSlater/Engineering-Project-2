@@ -414,10 +414,20 @@ form.like-form {
 
 /* Navbar */
 .navbar {
+    /*Fixed to top updates*/
+    position: sticky !important;
+    top: 0;
+    /*Navbar renders on top of other content as you scroll,rather than overlapping:*/
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+
+
     background-color: var(--accent);
     background: linear-gradient(var(--accent), oklch(from var(--accent) calc(l + 0.1) c h));
 
     ul {
+
         display: flex;
         margin: 0 auto;
         padding: 1rem 0;
@@ -470,8 +480,43 @@ form.like-form {
         button {
             padding: 0.4rem 0.7rem;
         }
+
+    }
+
+    .navbar-toggle {
+        display: none;
+        color: var(--primary-content);
+        font-size: 1.5rem;
+        background: none;
+        border: none;
     }
 }
+        /*for smaller screens:*/
+
+        @media (max-width: 600px) {
+        .navbar {
+            flex-wrap: wrap;
+            position: relative;
+
+        .navbar-toggle{
+            display: block;
+            margin-left: auto;
+        }
+
+        .container{
+            display: none;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+        &.active .container{
+            display: flex;
+        }
+        }
+        }
+
+
+
 
 .edit-post-container {
     max-width: 760px;
