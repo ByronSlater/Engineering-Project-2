@@ -25,10 +25,44 @@
 <body>
     <div th:replace="~{fragments/navbar :: navbar}"></div>
     <div class="container">
-        <main>
-            <h1>Profile</h1>
+        <main class="profile">
+            <div class="profile-info">
+                <div class="profile-pic">
+                    <img
+                        th:src="@{${user.getImageLink()}}"
+                        alt="Profile Picture"
+                        width="100" height="100"
+                        class="profile-picture" />
+                    <form
+                        th:if="${friendStatus.equals('same user')}"
+                        action="#"
+                        enctype="multipart/form-data"
+                        th:action="'/upload_pp/' + ${user.getId()}"
+                        th:object="${post}"
+                        method="post">
 
-            <h1 th:text="${friendStatus}"></h1>
+                        <input
+                            type="file"
+                            id="file"
+                            onchange="this.form.submit()"
+                            name="file"
+                            accept="image/jpeg, image/jpg"
+                            hidden
+                        />
+                        <label class="button" for="file">Upload</label>
+
+                    </form>
+                </div>
+                <h2 th:action="@{/profile}" th:object="${user}" method="get"></h2>
+                <h3 th:text="${user.username}"></h3>
+                <p th:text="${user.bio}"></p>
+                <div th:unless="${user.bio != null and !user.bio.isBlank()}">
+                    <p><em>No Bio Yet</em></p>
+                </div>
+                <a th:href="@{/profile/{id}/edit(id=${user.id})}">
+                    <button class="button" type="button">Edit Bio</button>
+                </a>
+            </div>
 
             <div th:switch="${friendStatus}" class="friend">
                 <form th:case="'none'" method="post" th:action="'/makefriend/' + ${user.getId()}">
@@ -40,25 +74,12 @@
                 <form th:case="'they sent'" method="post" th:action="'/declinefriend/' + ${user.getId()}">
                     <input type="submit" class="button" value="decline" />
                 </form>
-                <h3 th:case="'you sent'">Request sent</h3>
+                <h3 th:case="'sent'">Request sent</h3>
                 <h3 th:case="'they declined'">They declined</h3>
             </div>
 
-            <div>
-                <img th:src="@{'/images/' + ${user.profile_picture}}" alt="Profile Picture" width="100" height="100"
-                    class="profile-picture">
-                <h2 th:action="@{/profile}" th:object="${user}" method="get"></h2>
-                <h3 th:text="${user.username}"></h3>
-                <h4 th:text="${user.bio}"></h4>
-                <div th:unless="${user.bio != null and !user.bio.isBlank()}">
-                    <p><em>No Bio Yet</em></p>
-                </div>
-                <a th:href="@{/profile/{id}/edit(id=${user.id})}">
-                    <button class="button" type="button">Edit Bio</button>
-                </a>
-            </div>
 
-            <h4>Posts:</h4>
+
             <div class="posts">
                 <!-- The next three lines inserted here deals with search queries that have no result. Instead of the page being blank/not giving a prompt user response,
                 it will state to the user that there are no posts found for the keyword they are trying to search. -->
@@ -67,7 +88,7 @@
                 </p>
 
                 <div class="post" th:each="post : ${posts}">
-                    <img th:src="@{'/images/' + ${post.user.profile_picture}}" class="avatar" alt="Profile Picture"
+                    <img th:src="${post.getUser().getImageLink()}" class="avatar" alt="Profile Picture"
                         width="50" height="50" />
 
                     <div class="post-content">
