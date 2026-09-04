@@ -7,8 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 //starts real app on an actual port, rather than a simulated in-memory request
@@ -42,9 +46,21 @@ public class AboutUsTest {
         driver.get("http://localhost:8081/");
         driver.findElement(By.linkText("Sign up")).click();
         driver.findElement(By.name("email")).sendKeys(email);
-        driver.findElement(By.name("password")).sendKeys("P@55qw0rd");
+        driver.findElement(By.name("password")).sendKeys("P@55qw0rd1234567");
         //finds the form and types text into it , simulating a real user, then finds the submit and simulates it
         driver.findElement(By.name("action")).click();
+
+        // wait for the post login page to actually finish loading
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // if this line throws, I'll be able to see what's really on the page
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText("About")));
+        } catch (Exception e) {
+            System.out.println("Current URL was: " + driver.getCurrentUrl());
+            System.out.println("Page source was:\n" + driver.getPageSource());
+            throw e;
+        }
 
         //navigate to about us, and search for About:
         driver.findElement(By.linkText("About")).click();

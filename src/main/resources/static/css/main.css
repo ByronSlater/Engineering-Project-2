@@ -550,3 +550,64 @@ form.like-form {
         margin-left: 0;
     }
 }
+
+
+/*About page*/
+main{
+    h1{
+        margin-bottom: 0.25rem;
+    }
+    h2{
+        color: var(--primary);
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+    }
+}
+.team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+}
+
+.team-card {
+    flex: 1 1 260px;
+    max-width: 320px;
+    padding: 1.5rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    box-shadow: 0 4px 14px rgb(27 38 79 / 7%);
+    transition: box-shadow 150ms, transform 150ms;
+
+    &:hover {
+        box-shadow: 0 6px 20px rgb(27 38 79 / 12%);
+        transform: translateY(-2px);
+    }
+    .team-card strong {
+        font-weight: 700;
+    }
+    h3 {
+        margin: 0 0 0.5rem;
+        color: var(--accent);
+    }
+
+    a {
+        display: inline-block;
+        margin-bottom: 0.75rem;
+        color: var(--secondary);
+        font-size: 0.85rem;
+        text-decoration: none;
+        word-break: break-all;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--content);
+    }
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head lang="en">
+<!--    stylesheet that fixes inconsistencies in how different browsers apply their own default styles to HTML elements:-->
+    <link rel="stylesheet" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!--    Included more weight to have hobbies more visible:-->
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Roboto:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+
+    <meta charset="UTF-8" />
+    <title>About Us - Acebook</title>
+</head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <main>
+        <h1>About Us</h1>
+        <h2>About Acebook</h2>
+        <p>
+            Welcome to Acebook, a place to connect, share, and keep up with the people who matter to you!
+            Whether you're posting an update or catching up with friends, Acebook gives you a simple space to stay social.
+        </p>
+        <p>
+            Acebook is a full-stack social networking app built with Java, Spring Boot, Thymeleaf, and PostgreSQL,
+            with Auth0 and Spring Security keeping accounts safe. Testing and database migrations
+            help keep it reliable as it grows.
+        </p>
+
+        <h2> Team MC DAB 🚀</h2>
+
+        <div class="team-grid">
+
+            <div class="team-card">
+                <h3>Byron Slater</h3>
+<!--                "blank" tells the browser to open the link in a new tab:-->
+<!--                    noopener stops manipulate of tab-->
+                <a href="https://github.com/ByronSlater" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <p><strong>Hobbies:</strong>👨‍🍳 Cooking and 😴 sleeping</p>
+            </div>
+
+            <div class="team-card">
+                <h3>Charlotte Adams</h3>
+                <a href="https://github.com/charlo-adams" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <p><strong>Hobbies:</strong> 🎮 Playing video games and 🏄 surfing</p>
+            </div>
+
+            <div class="team-card">
+                <h3>Michael Connolly</h3>
+                <a href="https://github.com/MConnolly15" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <p><strong>Hobbies:</strong> ⛳ Playing Golf and Brazilian Jiu Jitsu 🥋 </p>
+            </div>
+
+            <div class="team-card">
+                <h3>Alicja Kanafa</h3>
+                <a href="https://github.com/alicjakanafa" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <p><strong>Hobbies:</strong> 📖 Reading and 🎮 playing The Sims 4, 💻 working on small HTML/CSS passion projects (thanks Tumblr!), and has a Jack Russell/Rat Terrier cross called Roxy 🐕</p>
+            </div>
+
+            <div class="team-card">
+                <h3>Daphna Azari</h3>
+                <a href="https://github.com/DaphnaAzari" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <p><strong>Hobbies:</strong> 🏺 Handbuilding and sculpting ceramics, 🎬 watching movies and standup shows, and kicking leaves with my dog Gizmo!! 🍁🐶</p>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+</body>
+
+</html>
+
