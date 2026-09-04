@@ -45,7 +45,7 @@ public class FriendService {
     }
 
     public void acceptFriendshipRequest(User sender, User receiver) {
-        Friend f = friendRepository.findBySenderAndReceiver(sender, receiver);
+        Friend f = friendRepository.findBySenderAndReceiver(sender, receiver).get();
         FriendStatus fs = friendStatusRepository.findByDescription("accepted");
 
         f.setStatus(fs);
@@ -53,10 +53,44 @@ public class FriendService {
     }
 
     public void declineFriendshipRequest(User sender, User receiver) {
-        Friend f = friendRepository.findBySenderAndReceiver(sender, receiver);
+        Friend f = friendRepository.findBySenderAndReceiver(sender, receiver).get();
         FriendStatus fs = friendStatusRepository.findByDescription("declined");
 
         f.setStatus(fs);
         friendRepository.save(f);
+    }
+
+    public String getFriendshipStatus(User viewer, User viewee) {
+        var f = friendRepository.findBySenderAndReceiver(viewer, viewee);
+
+        if (f.isPresent()) {
+            var friend = f.get();
+            var desc = getStatusDescription(friend);
+
+            if (desc.equals("accepted")) {
+                return "friend";
+            } else if (desc.equals("pending")) {
+                return "sent";
+            } else {
+                return "they declined";
+            }
+        }
+
+        f = friendRepository.findBySenderAndReceiver(viewee, viewer);
+
+        if (f.isPresent()) {
+            var friend = f.get();
+            var desc = getStatusDescription(friend);
+
+            if (desc.equals("accepted")) {
+                return "friend";
+            } else if (desc.equals("pending")) {
+                return "they sent";
+            } else {
+                return "you declined";
+            }
+        }
+
+        return "none";
     }
 }
