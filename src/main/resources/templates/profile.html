@@ -19,7 +19,7 @@
     <meta charset="UTF-8">
 
 
-    <title>Title</title>
+    <title th:text="'Profile - '+ ${user.username}">Profile</title>
 </head>
 
 <body>
@@ -34,6 +34,13 @@
                     class="profile-picture">
                 <h2 th:action="@{/profile}" th:object="${user}" method="get"></h2>
                 <h3 th:text="${user.username}"></h3>
+                <h4 th:text="${user.bio}"></h4>
+                <div th:unless="${user.bio != null and !user.bio.isBlank()}">
+                    <p><em>No Bio Yet</em></p>
+                </div>
+                <a th:href="@{/profile/{id}/edit(id=${user.id})}">
+                    <button class="button" type="button">Edit Bio</button>
+                </a>
             </div>
 
             <h4>Posts:</h4>

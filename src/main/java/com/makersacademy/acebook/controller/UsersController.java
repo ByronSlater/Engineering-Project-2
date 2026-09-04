@@ -8,6 +8,7 @@ import com.makersacademy.acebook.service.PostService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -89,6 +90,23 @@ public class UsersController {
         Profile.addObject("likedPostIds", likedPostIds);
         return Profile;
     }
+
+    @GetMapping("/profile/{id}/edit")
+    public ModelAndView EditBioForm(@PathVariable Long id){
+        User user = userRepository.findById(id).orElseThrow();
+        ModelAndView model = new ModelAndView("editbio");
+        model.addObject("user", user);
+        return model;
+    }
+
+    @PostMapping("/profile/{id}/bio")
+    public RedirectView updateBio(@PathVariable Long id, @ModelAttribute User formuser){
+        User user = userRepository.findById(id).orElseThrow();
+        user.setBio(formuser.getBio());
+        userRepository.save(user);
+        return new RedirectView("/profile/" + id);
+    }
+
 
 
 }
