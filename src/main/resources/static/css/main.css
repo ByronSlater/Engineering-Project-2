@@ -193,6 +193,10 @@ form.post-form {
 
                 >.like-form {
                     margin: 0.5rem auto;
+
+                    .material-symbols-outlined {
+                        font-size: 1rem;
+                    }
                 }
 
                 >.comment-content {
