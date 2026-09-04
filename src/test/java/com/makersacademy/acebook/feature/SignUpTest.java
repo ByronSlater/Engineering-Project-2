@@ -38,7 +38,8 @@ public class SignUpTest {
         driver.get("http://localhost:8081/");
         driver.findElement(By.linkText("Sign up")).click();
         driver.findElement(By.name("email")).sendKeys(email);
-        driver.findElement(By.name("password")).sendKeys("P@55qw0rd");
+        //D.A. updated password from P@55qw0rd to P@55qw0rd12345678 because it might fail as too short:
+        driver.findElement(By.name("password")).sendKeys("P@55qw0rd12345678");
         driver.findElement(By.name("action")).click();
         String greetingText = driver.findElement(By.id("greeting")).getText();
         assertEquals("Signed in as " + email, greetingText);
