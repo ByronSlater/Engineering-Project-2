@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN bio TEXT CHECK ( char_length(bio) <= 500);
