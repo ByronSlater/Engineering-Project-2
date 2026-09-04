@@ -1,0 +1,57 @@
+<!-- This is the Edit page for a post that's been selected to edit. -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head lang="en">
+    <link rel="stylesheet" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=thumb_up" />
+    <!--        Font for body:-->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+    <!--        Font for Logo:-->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Roboto:ital,wght@0,300;1,300&display=swap"
+        rel="stylesheet">
+
+    <meta charset="UTF-8" />
+    <title>Edit Post | Acebook</title>
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="edit-post-container">
+
+        <div class="edit-post-card">
+
+            <h2>Edit your post</h2>
+
+            <form th:action="@{/posts/{id}/edit(id=${post.id})}" method="post">
+
+                <textarea name="content" th:text="${post.content}" maxlength="250" required>
+            </textarea>
+
+                <div class="edit-post-actions">
+                    <a th:href="@{/posts}" class="cancel-button">
+                        Cancel
+                    </a>
+
+                    <button class="button" type="submit">
+                        Save changes
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

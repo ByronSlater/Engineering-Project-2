@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=thumb_up,delete,image" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=thumb_up,delete,image,edit" />
     <!--        Font for body:-->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
     <!--        Font for Logo:-->
@@ -100,7 +100,10 @@
                             </div>
                         </form>
 
-
+                        <a class="material-symbols-outlined edit-button" title="Edit your post" th:if="${post.user.username == loggedInUsername}"
+                            th:href="@{/posts/{id}/edit(id=${post.id})}">
+                            edit
+                        </a>
 
                         <form th:if="${post.user.username == loggedInUsername}"
                             th:action="@{/posts/{id}/delete(id=${post.id})}" method="post">
@@ -119,10 +122,13 @@
                                 <p th:text="${comment.getText()}"></p>
                                 <p th:text="${comment.getUser().getNickName()}" class="author"></p>
                             </div>
+
+
                             <form th:action="@{/comments/{id}/like(id=${comment.id})}" method="post" class="like-form">
                                 <button type="submit" class="like-button">
                                     <span class="material-symbols-outlined">thumb_up</span>
                                 </button>
+
 
                                 <button type="button" class="like-count" th:text="${comment.getLikedBy().size()}"
                                     th:attr="data-likes-target=${'comment-liked-by-' + comment.id}" onclick="const list = document.getElementById(this.dataset.likesTarget);
