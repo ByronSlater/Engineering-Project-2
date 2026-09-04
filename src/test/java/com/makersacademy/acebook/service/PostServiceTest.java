@@ -3,14 +3,17 @@ package com.makersacademy.acebook.service;
 import com.makersacademy.acebook.model.Post;
 import com.makersacademy.acebook.repository.CommentRepository;
 import com.makersacademy.acebook.repository.PostRepository;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import com.makersacademy.acebook.model.User;
+import java.util.Optional;
+import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
+import java.util.NoSuchElementException;
 
 //imports for editing posts
 import com.makersacademy.acebook.model.User;
@@ -102,5 +105,73 @@ public class PostServiceTest {
             () -> postService.editPost(10L, 2L, "You should not be able to edit this post!")
         );
     }
-    
+
+    @Test
+    public void userCanDeleteTheirOwnPost() {
+        PostRepository postRepository = Mockito.mock(PostRepository.class);
+        CommentRepository commentRepository = Mockito.mock(CommentRepository.class);
+
+        User user = new User("owner@email.com");
+        user.setId(1L);
+
+        Post post = new Post("My post");
+        post.setId(10L);
+        post.setUser(user);
+
+        when(postRepository.findById(10L))
+                .thenReturn(Optional.of(post));
+
+        PostService postService =
+                new PostService(postRepository, commentRepository);
+
+        postService.deletePost(10L, 1L);
+
+        verify(postRepository).delete(post);
+    }
+
+    @Test
+    public void userCannotDeleteAnotherUsersPost(){
+        PostRepository postRepository = Mockito.mock(PostRepository.class);
+        CommentRepository commentRepository = Mockito.mock(CommentRepository.class);
+
+        User postOwner = new User("owner@email.com");
+        postOwner.setId(1L);
+
+        Post post = new Post("Someone else's post");
+        post.setId(10L);
+        post.setUser(postOwner);
+
+        when(postRepository.findById(10L))
+                .thenReturn(Optional.of(post));
+
+        PostService postService =
+                new PostService(postRepository, commentRepository);
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> postService.deletePost(10L, 2L)
+        );
+
+        verify(postRepository, never()).delete(post);
+    }
+
+    @Test
+    public void cannotDeletePostThatDoesNotExist(){
+        PostRepository postRepository = Mockito.mock(PostRepository.class);
+        CommentRepository commentRepository = Mockito.mock(CommentRepository.class);
+
+        when(postRepository.findById(99L))
+                .thenReturn(Optional.empty());
+
+        PostService postService =
+                new PostService(postRepository, commentRepository);
+
+        assertThrows(
+                NoSuchElementException.class,
+                () -> postService.deletePost(99L, 1L)
+        );
+
+        verify(postRepository, never()).delete(Mockito.any(Post.class));
+    }
+
 }

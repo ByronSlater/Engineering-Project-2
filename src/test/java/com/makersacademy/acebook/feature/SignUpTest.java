@@ -10,6 +10,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import java.time.Duration;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
@@ -41,7 +44,13 @@ public class SignUpTest {
         //D.A. updated password from P@55qw0rd to P@55qw0rd12345678 because it might fail as too short:
         driver.findElement(By.name("password")).sendKeys("P@55qw0rd12345678");
         driver.findElement(By.name("action")).click();
-        String greetingText = driver.findElement(By.id("greeting")).getText();
-        assertEquals("Signed in as " + email, greetingText);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.linkText("Logout"))
+        );
+
+        String logoutText = driver.findElement(By.linkText("Logout")).getText();
+        assertEquals("Logout", logoutText);
     }
 }
