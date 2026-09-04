@@ -7,7 +7,7 @@ import static java.lang.Boolean.TRUE;
 
 @Data
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
