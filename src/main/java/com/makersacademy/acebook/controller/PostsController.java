@@ -177,4 +177,59 @@ public class PostsController {
         return "redirect:/posts";
     }
 
+    // This method for the PostsController will deal with editing a post, and retrieving the Edit form.
+
+    // For example, if the user requests /posts/7/edit, this is the flow chart:
+
+    // Find post 7
+    // ↓
+    // Who is logged in?
+    // ↓
+    // Are they post 7's owner?
+    // ↓
+    // YES → show edit form
+    // NO  → refuse
+
+    @GetMapping("/posts/{postId}/edit")
+    public String editPostForm(
+        @PathVariable Long postId,
+        @AuthenticationPrincipal OidcUser oidcUser,
+        Model model
+    ) {
+
+        String email = oidcUser.getEmail();
+
+        Long loggedInUserId = userRepository.findUserByUsername(email)
+        .orElseThrow(() -> new IllegalStateException("Logged-in user is not registered"))
+        .getId();
+
+        Post post = postService.getPostForEditing(postId, loggedInUserId);
+
+        model.addAttribute("post", post);
+
+        return "posts/edit";
+
+    }
+
+    // This here is the POST route for saving the edit made
+
+@PostMapping("/posts/{postId}/edit")
+public String updatePost(
+        @PathVariable Long postId,
+        @RequestParam("content") String content,
+        @AuthenticationPrincipal OidcUser oidcUser
+) {
+
+    String email = oidcUser.getEmail();
+
+    Long loggedInUserId = userRepository.findUserByUsername(email)
+            .orElseThrow(() ->
+                    new IllegalStateException("Logged-in user is not registered"))
+            .getId();
+
+    postService.editPost(postId, loggedInUserId, content);
+
+    return "redirect:/posts";
+}
+
 }

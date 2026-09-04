@@ -12,6 +12,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+//imports for editing posts
+import com.makersacademy.acebook.model.User;
+import java.util.Optional;
+import static org.mockito.Mockito.verify;
+
 public class PostServiceTest {
 
     @Test
@@ -54,4 +59,48 @@ public class PostServiceTest {
         assertEquals(1, posts.size());
         assertEquals(matchingPost, posts.get(0));
     }
+
+    // test for editing posts
+    @Test
+    public void userCanEditTheirOwnPost() {
+        PostRepository postRepository = Mockito.mock(PostRepository.class);
+        CommentRepository commentRepository = Mockito.mock(CommentRepository.class);
+
+        User user = new User("owner@example.com");
+        user.setId(1L);
+
+        Post post = new Post("Original post");
+        post.setUser(user);
+
+        when(postRepository.findById(10L)).thenReturn(Optional.of(post));
+
+        PostService postService = new PostService(postRepository, commentRepository);
+
+        postService.editPost(10L, 1L, "Updated post");
+
+        assertEquals("Updated post", post.getContent());
+        verify(postRepository).save(post);
+    }
+
+    @Test
+    public void userCannotEditAnotherUsersPost() {
+        PostRepository postRepository = Mockito.mock(PostRepository.class);
+        CommentRepository commentRepository = Mockito.mock(CommentRepository.class);
+
+        User owner = new User("owner@example.com");
+        owner.setId(1L);
+
+        Post post = new Post("Original post");
+        post.setUser(owner);
+
+        when(postRepository.findById(10L)).thenReturn(Optional.of(post));
+
+        PostService postService = new PostService(postRepository, commentRepository);
+
+        org.junit.jupiter.api.Assertions.assertThrows(
+            IllegalStateException.class,
+            () -> postService.editPost(10L, 2L, "You should not be able to edit this post!")
+        );
+    }
+    
 }

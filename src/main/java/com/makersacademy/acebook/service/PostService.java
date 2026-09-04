@@ -69,4 +69,45 @@ public class PostService {
 
         postRepository.delete(post);
     }
+
+    // editing posts - this enforces ownership over posts when the user opens the Edit page
+    // rather than duplicating it into the controller I am putting it here and simplifying my initial code, 
+    // which was similar to the above deletePost() method written by Michael.
+    // both opening the edit form and submitting an edit will now enforce 
+    // the same ownership rule
+
+    public Post getPostForEditing(Long postId, Long loggedInUserId) {
+
+    Post post = postRepository.findById(postId).orElseThrow();
+
+    if (!post.getUser().getId().equals(loggedInUserId)) {
+        throw new IllegalStateException("You can only edit your own posts");
+    }
+
+    return post;
+}
+
+
+    public void editPost(Long postId, Long loggedInUserId, String newContent) {
+
+        Post post = getPostForEditing(postId, loggedInUserId);
+
+        // This deals with server side blank protection as people can technically bypass HTML validation
+        // with the required statmement
+
+        if (newContent == null || newContent.isBlank()) {
+            throw new IllegalStateException("Your post content cannot be left empty!");
+        }
+
+        String updatedContent = newContent.trim(); // Get rid of any front trailing whitespace
+
+        if (updatedContent.length() > 250) { // if the post is over 250 characters long
+            throw new IllegalArgumentException("Your post cannot exceed 250 characters.");
+        }
+
+        post.setContent(updatedContent);
+
+        postRepository.save(post);
+    }
+
 }
