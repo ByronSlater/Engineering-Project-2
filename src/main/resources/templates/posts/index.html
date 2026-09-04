@@ -72,7 +72,7 @@
 
                     <div class="post-content">
                         <div class="top-row">
-                            <p class="author" th:text="${post.user.getNickName()}"></p>
+                            <a th:href="'/profile/' + ${post.user.getId()}" class="author" th:text="${post.user.getNickName()}"></a>
                             <p class="created-at" th:text="${#temporals.format(post.getCreatedAt(), 'dd/MM/yyyy')}">
                             </p>
                         </div>

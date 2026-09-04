@@ -4,6 +4,7 @@ package com.makersacademy.acebook.controller;
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.PostRepository;
 import com.makersacademy.acebook.repository.UserRepository;
+import com.makersacademy.acebook.service.FriendService;
 import com.makersacademy.acebook.service.PostService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,14 +20,21 @@ import java.util.stream.Collectors;
 
 @RestController
 public class UsersController {
-    final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final PostService postService;
+    private final FriendService friendService;
 
-    UsersController(UserRepository userRepository, PostRepository postRepository, PostService postService) {
+    UsersController(
+        UserRepository userRepository,
+        PostRepository postRepository,
+        PostService postService,
+        FriendService friendService
+    ) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.postService = postService;
+        this.friendService = friendService;
     }
 
     @GetMapping("/users/after-login")
@@ -74,7 +82,10 @@ public class UsersController {
 
     @GetMapping("/profile/{id}")
     public ModelAndView DisplayProfile (
-        @PathVariable Long id, @RequestParam(defaultValue = "newest") String sort){
+        @PathVariable Long id,
+        @RequestParam(defaultValue = "newest") String sort,
+        @AuthenticationPrincipal DefaultOidcUser principal
+    ){
         User user = userRepository.findById(id).orElseThrow();
         var posts = postService.allPosts(sort, "").stream().filter(post -> post.getUser().getId().equals(user.getId())).toList();
 
@@ -85,6 +96,17 @@ public class UsersController {
             .map(post -> post.getId())
             .collect(Collectors.toSet());
 
+        var loggedInUser = userRepository.findUserByUsername(principal.getEmail()).get();
+
+        String friendRequestStatus;
+
+        if (loggedInUser == user) {
+            friendRequestStatus = "none";
+        } else {
+            friendRequestStatus = friendService.getFriendshipStatus(loggedInUser, user);
+        }
+
+        Profile.addObject("friendStatus", friendRequestStatus);
         Profile.addObject("user", user);
         Profile.addObject("posts", posts);
         Profile.addObject("likedPostIds", likedPostIds);
